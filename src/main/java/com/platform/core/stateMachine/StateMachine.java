@@ -15,7 +15,7 @@ import java.util.List;
 public class StateMachine {
 
     @Getter
-    private ArrayList<State> states;
+    private final ArrayList<State> states;
 
     private final Object primarySubject;
 
@@ -29,22 +29,15 @@ public class StateMachine {
     }
 
 
-    public StateMachine addState(@NonNull final String name, final Object... args) throws IllegalStateError {
+    public void addState(@NonNull final String name, final Object... args) throws IllegalStateError {
         verifyUniqueStateName(name);
         State newstate = new StandaloneState(name, List.of(args));
         states.add(newstate);
-        return this;
-    }
-
-    private void verifyUniqueStateName(String name) throws IllegalStateError {
-        for (State state : states)
-            if (state.getName().equals(name))
-                throw new IllegalStateError("State Already exist");
     }
 
     public void start() throws IllegalStateError, NoSuchMethodException, InvocationTargetException, IllegalAccessException, NotImplementedError {
+        verifyTerminalState();
         startState(0);
-
     }
 
     public void next() throws NotImplementedError, InvocationTargetException, NoSuchMethodException, IllegalAccessException, IllegalStateError {
@@ -58,14 +51,14 @@ public class StateMachine {
                 break;
         }
         if (i >= states.size())
-            throw new IllegalStateError("No such State" + nextStateName);
+            throw new IllegalStateError("No such State " + nextStateName);
 
         startState(i);
     }
 
 
     private void startState(int index) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NotImplementedError, IllegalStateError {
-        if(states.get(currentStateIndex).isTerminalState())
+        if (states.get(currentStateIndex).isTerminalState())
             return;
 
         if (index >= states.size()) {
@@ -82,26 +75,33 @@ public class StateMachine {
 
     private void invoke(Method method, List<Object> args) throws InvocationTargetException, IllegalAccessException, NotImplementedError {
         switch (args.size()) {
-            case 0:
-                method.invoke(primarySubject);
-                break;
-            case 1:
-                method.invoke(primarySubject, args.get(0));
-                break;
-            case 2:
-                method.invoke(primarySubject, args.get(0), args.get(1));
-                break;
-            case 3:
-                method.invoke(primarySubject, args.get(0), args.get(1), args.get(2));
-                break;
-            default:
-                throw new NotImplementedError("invoke method with args: " + args.size());
+            case 0 -> method.invoke(primarySubject);
+            case 1 -> method.invoke(primarySubject, args.get(0));
+            case 2 -> method.invoke(primarySubject, args.get(0), args.get(1));
+            case 3 -> method.invoke(primarySubject, args.get(0), args.get(1), args.get(2));
+            default -> throw new NotImplementedError("invoke method with args: " + args.size());
         }
     }
 
     public void setTerminalState(String methodName) {
-        for(State state : states)
-            if(state.getName().equals(methodName))
-                state.setTerminalState();
+        for (State state : states)
+            if (state.getName().equals(methodName))
+                state.setTerminalState(true);
     }
+
+
+    private void verifyUniqueStateName(String name) throws IllegalStateError {
+        for (State state : states)
+            if (state.getName().equals(name))
+                throw new IllegalStateError("State Already exist");
+    }
+
+    private void verifyTerminalState() throws IllegalStateError {
+        for (State state : states)
+            if (state.isTerminalState())
+                return;
+        throw new IllegalStateError("No Terminal State in Machine");
+    }
+
+
 }

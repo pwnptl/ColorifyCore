@@ -2,29 +2,29 @@ package com.platform.core.stateMachine;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 public abstract class State {
-    protected String name;
+    @NonNull
+    private String name;
 
-    protected List<Object> args;
+    private List<Object> args;
 
-    protected boolean isTerminalState;
+    @Setter
+    private boolean terminalState;
 
-    public State(String name) {
+    public State(final String name) {
         this.name = name;
-        isTerminalState = false;
+        terminalState = false;
     }
 
-    public State(String name, List<Object> args) {
+    public State(final String name, final List<Object> args) {
         this.name = name;
         this.args = args;
-        this.isTerminalState = false;
-    }
-
-    public void setTerminalState() {
-        this.isTerminalState = true;
+        this.terminalState = false;
     }
 }

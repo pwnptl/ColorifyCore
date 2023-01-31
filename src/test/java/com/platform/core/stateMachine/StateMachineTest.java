@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class StateMachineTest {
 
@@ -46,14 +48,29 @@ class StateMachineTest {
                 .verifyAnyMethodInvoked();
     }
 
+    @Test
+    void testStart_withoutTerminalState() throws NotImplementedError, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+        // todo its better to expect exception.
+        Exception e = null;
+        try {
+            new TestRunner()
+                        .newStateMachine()
+                        .addState("methodA")
+                        .addState("methodB")
+                        .verifyStateCount(2)
+                        .startMachine();
+        } catch (IllegalStateError illegalStateError) {
+            e = illegalStateError;
+        }
+        assertNotNull(e);
+    }
 
-    private class TestRunner {
+
+    private static class TestRunner {
 
         /**
          * Dummy Class for primaryObject in StateMachine.
          */
-
-
         private DummyClass dummyObject;
         private StateMachine stateMachine;
 
@@ -71,7 +88,7 @@ class StateMachineTest {
 
         public TestRunner addState(String methodName, boolean terminalState) throws IllegalStateError {
             stateMachine.addState(methodName);
-            if(terminalState)
+            if (terminalState)
                 stateMachine.setTerminalState(methodName);
             return this;
         }
