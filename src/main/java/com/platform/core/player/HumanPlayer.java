@@ -1,8 +1,12 @@
-package com.colorify.colorify.model.player;
+package com.platform.core.player;
 
 public class HumanPlayer extends Player {
 
     public HumanPlayer(String id, String name) {
         super(id, name);
+    }
+
+    public HumanPlayer(String name) {
+        super(name);
     }
 }
