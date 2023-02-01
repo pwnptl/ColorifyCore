@@ -1,11 +1,13 @@
-package com.colorify.game.mechanics;
+package com.colorify.game.mechanics.board;
 
 import com.colorify.game.mechanics.cell.BoardCell;
 import com.colorify.game.mechanics.cell.IntegerBoardCell;
 import com.colorify.game.utilities.Constants;
+import lombok.Getter;
 
 public class Board {
 
+    @Getter
     private BoardCell[][] grid;
     private int rows;
     private int cols;
@@ -13,7 +15,7 @@ public class Board {
     private int uniqueColors;
 
 
-    Board() {
+    public Board() {
         rows = Constants.DEFAULT_BOARD_ROWS;
         cols = Constants.DEFAULT_BOARD_COLS;
         uniqueColors = Constants.DEFAULT_BOARD_COLORS;
