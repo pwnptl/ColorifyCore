@@ -1,6 +1,6 @@
 package com.colorify.game.mechanics.cell;
 
-import com.colorify.game.utilities.RandomGenerator;
+import com.platform.core.utility.RandomGenerator;
 
 public class IntegerBoardCell implements BoardCell {
     int cell;
