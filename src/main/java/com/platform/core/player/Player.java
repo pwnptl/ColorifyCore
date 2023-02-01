@@ -1,9 +1,8 @@
 package com.platform.core.player;
 
-import com.colorify.game.utilities.RandomGenerator;
+import com.platform.core.utility.RandomGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NonNull;
 
 @AllArgsConstructor
 @Getter

@@ -7,7 +7,7 @@ public class PlayerBuilder {
         return player;
     }
 
-    public Player buildbot() throws Exception {
+    public Player buildBot() throws Exception {
         throw new Exception("not implemented");
     }
 }
