@@ -1,4 +1,6 @@
-package com.colorify.game.utilities;
+package com.platform.core.utility;
+
+import com.colorify.game.utilities.Constants;
 
 import java.time.Instant;
 import java.util.Random;
