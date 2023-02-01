@@ -1,6 +1,5 @@
 package com.platform.core.stateMachine;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -26,5 +25,10 @@ public abstract class State {
         this.name = name;
         this.args = args;
         this.terminalState = false;
+    }
+
+    @Override
+    public String toString(){
+        return name;
     }
 }
