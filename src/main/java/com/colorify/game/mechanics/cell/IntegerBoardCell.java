@@ -1,11 +1,15 @@
 package com.colorify.game.mechanics.cell;
 
 import com.platform.core.utility.RandomGenerator;
+import lombok.Getter;
 
 public class IntegerBoardCell implements BoardCell {
-    int cell;
+
+    private static RandomGenerator randomGenerator = new RandomGenerator();
+    @Getter
+    private int cell;
 
     public IntegerBoardCell(final int modulo) {
-        cell = RandomGenerator.getRandNumber() % modulo;
+        cell = randomGenerator.getRandNumber(modulo);
     }
 }

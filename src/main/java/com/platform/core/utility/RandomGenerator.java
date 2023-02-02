@@ -6,12 +6,13 @@ import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
 
-public class RandomGenerator {
+public class RandomGenerator extends Random{
 
+    public RandomGenerator() { super(Instant.now().toEpochMilli());}
     private final static Random random = new Random(Instant.now().toEpochMilli());
 
-    public static int getRandNumber(){
-        return random.nextInt() % Constants.DEFAULT_BOARD_COLORS;
+    public int getRandNumber(final int modulo){
+        return next(Integer.SIZE-1) % modulo;
     }
 
     public static String getUUID() {

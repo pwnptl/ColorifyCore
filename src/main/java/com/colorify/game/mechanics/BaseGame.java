@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.platform.core.player.Player;
 import com.platform.core.player.PlayerBuilder;
 import com.platform.core.stateMachine.StateMachine;
+import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 @Getter
 public class BaseGame extends AbstractBaseGame {
-
+    private static Logger logger = new Logger();
     @Getter
     private Board board;
     @Getter
@@ -30,7 +31,7 @@ public class BaseGame extends AbstractBaseGame {
     @Override
     public String getData() {
         try {
-            return ObjectJsonConverter.toJSON(this);
+            return ObjectJsonConverter.toJSON(board);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +40,7 @@ public class BaseGame extends AbstractBaseGame {
     @Override
     public void init() {
         gameConfiguration = new GameConfiguration();
-        board = new Board();
+        board = new Board(gameConfiguration);
         palette = new Palette(gameConfiguration);
         maxPlayerCount = gameConfiguration.getNumberOfPlayers();
         players = new ArrayList<>();
