@@ -2,6 +2,7 @@ package com.platform.core.stateMachine;
 
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.errors.NotImplementedError;
+import com.platform.core.utility.Logger;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 public class StateMachine {
-
+    private static Logger logger = new Logger();
     @Getter
     private final ArrayList<State> states;
 
@@ -70,6 +71,7 @@ public class StateMachine {
 
     private void startState(State state) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, NotImplementedError {
         Method method = primarySubject.getClass().getMethod(state.getName());
+        logger.info("invoking state : " + method.getName());
         invoke(method, state.getArgs());
     }
 
