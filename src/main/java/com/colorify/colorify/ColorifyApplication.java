@@ -1,14 +1,12 @@
 package com.colorify.colorify;
 
-import com.colorify.game.AbstractBaseGame;
-import com.colorify.game.GameStateMachineInitializer;
+import com.colorify.game.mechanics.AbstractBaseGame;
+import com.platform.core.stateMachine.GameStateMachineInitializer;
 import com.colorify.game.mechanics.BaseGame;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.errors.NotImplementedError;
 import com.platform.core.utility.Logger;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +32,7 @@ public class ColorifyApplication {
 
     @GetMapping("/init")
     public String init(@RequestParam(value = "myName", defaultValue = "World") String name) throws IllegalStateError, NotImplementedError, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        logger.info("\ninit called");
+        logger.info("\ninit api called");
         AbstractBaseGame baseGame = new BaseGame();
         GameStateMachineInitializer gameStateMachineInitializer = new GameStateMachineInitializer();
         gameStateMachineInitializer.init(baseGame);
@@ -44,6 +42,5 @@ public class ColorifyApplication {
 
     private String gameData(AbstractBaseGame baseGame) {
         return baseGame.getData();
-
     }
 }
