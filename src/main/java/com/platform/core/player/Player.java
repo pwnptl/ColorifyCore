@@ -12,6 +12,6 @@ public abstract class Player {
 
     public Player(final String name) {
         this.name = name;
-        this.id = RandomGenerator.getUUID();
+        this.id = RandomGenerator.getInstance().getUUID();
     }
 }

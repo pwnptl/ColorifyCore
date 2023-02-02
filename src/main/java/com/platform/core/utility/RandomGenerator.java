@@ -6,16 +6,26 @@ import java.time.Instant;
 import java.util.Random;
 import java.util.UUID;
 
-public class RandomGenerator extends Random{
+public class RandomGenerator extends Random {
 
-    public RandomGenerator() { super(Instant.now().toEpochMilli());}
-    private final static Random random = new Random(Instant.now().toEpochMilli());
+    private static RandomGenerator instance;
 
-    public int getRandNumber(final int modulo){
-        return next(Integer.SIZE-1) % modulo;
+    private RandomGenerator() {
+        super(Instant.now().toEpochMilli());
+    }
+//    private final static Random random = new Random(Instant.now().toEpochMilli());
+
+    public static RandomGenerator getInstance() {
+        if (instance == null)
+            instance = new RandomGenerator();
+        return instance;
     }
 
-    public static String getUUID() {
+    public int getRandNumber(final int modulo) {
+        return next(Integer.SIZE - 1) % modulo;
+    }
+
+    public String getUUID() {
         return UUID.randomUUID().toString();
     }
 }
