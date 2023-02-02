@@ -28,7 +28,10 @@ public abstract class State {
     }
 
     @Override
-    public String toString(){
-        return name;
+    public String toString() {
+        String s = name;
+        if(terminalState)
+            s+="::TERMINAL";
+        return s;
     }
 }
