@@ -3,8 +3,7 @@ package com.platform.core.player;
 public class PlayerBuilder {
 
     public Player buildHuman(final String name) {
-        Player player = new HumanPlayer(name);
-        return player;
+        return new HumanPlayer(name);
     }
 
     public Player buildBot() throws Exception {
