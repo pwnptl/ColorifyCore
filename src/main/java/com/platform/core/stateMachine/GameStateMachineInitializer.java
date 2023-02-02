@@ -1,10 +1,10 @@
-package com.colorify.game;
+package com.platform.core.stateMachine;
 
+import com.colorify.game.mechanics.AbstractBaseGame;
 import com.colorify.game.utilities.Constants;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.errors.NotImplementedError;
-import com.platform.core.stateMachine.StateMachine;
 import com.platform.core.utility.Logger;
 import lombok.Getter;
 
