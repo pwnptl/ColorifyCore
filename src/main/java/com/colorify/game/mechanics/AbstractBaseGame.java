@@ -1,4 +1,4 @@
-package com.colorify.game;
+package com.colorify.game.mechanics;
 
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.stateMachine.StateMachine;

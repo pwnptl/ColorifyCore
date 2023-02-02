@@ -1,6 +1,5 @@
 package com.colorify.game.mechanics;
 
-import com.colorify.game.AbstractBaseGame;
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.Palette;
 import com.colorify.game.mechanics.player.ColorifyPlayerBuilder;
@@ -11,6 +10,7 @@ import com.platform.core.player.PlayerBuilder;
 import com.platform.core.stateMachine.StateMachine;
 import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
+import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 @Getter
 public class BaseGame extends AbstractBaseGame {
     private static Logger logger = new Logger();
+    @Getter
+    private String id;
     @Getter
     private Board board;
     @Getter
@@ -39,6 +41,7 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void init() {
+        id = RandomGenerator.getInstance().getUUID();
         gameConfiguration = new GameConfiguration();
         board = new Board(gameConfiguration);
         palette = new Palette(gameConfiguration);
