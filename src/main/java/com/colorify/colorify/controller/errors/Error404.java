@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
-import java.util.List;
 
 @RestController
 public class Error404 extends BaseError {
@@ -14,8 +13,8 @@ public class Error404 extends BaseError {
 
     @Override
     @RequestMapping(value = ERROR_PATH)
-    public List<String> error(HttpServletRequest request) {
+    public String error(HttpServletRequest request) {
         super.error(request);
-        return Collections.singletonList("404");
+        return "404";
     }
 }
