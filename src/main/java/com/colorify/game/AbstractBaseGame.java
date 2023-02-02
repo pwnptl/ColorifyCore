@@ -2,20 +2,32 @@ package com.colorify.game;
 
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.stateMachine.StateMachine;
+import lombok.Getter;
+
 
 public abstract class AbstractBaseGame {
 
     protected StateMachine stateMachine;
     protected GameConfiguration gameConfiguration;
 
-    public abstract void initGame();
+    public abstract String getData();
 
-    public abstract void addStates();
+    public abstract void init();
+
     public abstract void addPlayer(String name);
 
-    public abstract void startGame();
-    public abstract void nextMove();
-    public abstract void finishGame();
+    public abstract void start();
 
+    public abstract void makeMove();
+
+    public abstract void waitForOpponent();
+
+    public abstract void validate();
+
+    public abstract void finish();
+
+    public abstract void awards();
+
+    public abstract void terminate();
 
 }

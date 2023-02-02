@@ -16,16 +16,15 @@ public final class Constants {
 
     public static final ArrayList<String> states = new ArrayList<>() {
         {
-            add("gameInit");
-            add("WaitPlayerToJoin");
-            add("startGame");
+            // refer AbstractBaseGame class.
+            add("init");
+            add("addPlayer");
+            add("start");
             add("makeMove");
-            add("waitForOtherPlayerMove");
-
-            add("validateCurrentGame");
-            add("awarding");
-            add("terminateGame");
-
+            add("waitForOpponent");
+            add("validate");
+            add("finishGame");
+            add("awards");
         }
     };
 }
