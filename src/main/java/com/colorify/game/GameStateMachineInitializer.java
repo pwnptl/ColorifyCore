@@ -5,12 +5,13 @@ import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.errors.NotImplementedError;
 import com.platform.core.stateMachine.StateMachine;
+import com.platform.core.utility.Logger;
 import lombok.Getter;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class GameStateMachineInitializer {
-
+    public static Logger logger = new Logger();
     @Getter // getter only for unit test.
     protected StateMachine stateMachine;
 
@@ -19,6 +20,7 @@ public class GameStateMachineInitializer {
     public void init(final AbstractBaseGame baseGame) throws IllegalStateError {
         stateMachine = new StateMachine(baseGame);
         setStates();
+        logger.info("Machine initialised with states " + stateMachine.getStates());
     }
 
     public void startMachine() throws IllegalStateError, NotImplementedError, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
