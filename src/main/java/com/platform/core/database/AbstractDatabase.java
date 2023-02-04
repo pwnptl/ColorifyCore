@@ -1,5 +1,8 @@
 package com.platform.core.database;
 
+import com.colorify.game.mechanics.BaseGame;
+import com.platform.core.player.Player;
+
 abstract class AbstractDatabase {
 
     protected static AbstractDatabase instance;
@@ -16,9 +19,13 @@ abstract class AbstractDatabase {
 
     public abstract void init();
 
-    public abstract boolean put(final String id, final Object data);
+    // scalability issue ??? -> can we segregate MODELS from DB_OPERATIONS ??
+    public abstract boolean putPlayer(final String id, final Player data);
+    public abstract boolean putGame(final String id, final BaseGame data);
 
-    public abstract String query(final String id);
+    public abstract String queryPlayer(final String id);
+    public abstract BaseGame queryGame(final String id);
 
-    public abstract String delete(final String id);
+    public abstract boolean deletePlayer(final String id);
+    public abstract boolean deleteGame(final String id);
 }
