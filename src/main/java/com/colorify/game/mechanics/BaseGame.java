@@ -5,6 +5,7 @@ import com.colorify.game.mechanics.palette.Palette;
 import com.colorify.game.mechanics.player.ColorifyPlayerBuilder;
 import com.colorify.game.utilities.GameConfiguration;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.player.Player;
 import com.platform.core.player.PlayerBuilder;
 import com.platform.core.stateMachine.StateMachine;
@@ -18,8 +19,6 @@ import java.util.ArrayList;
 @Getter
 public class BaseGame extends AbstractBaseGame {
     private static Logger logger = new Logger();
-    @Getter
-    private String id;
     @Getter
     private Board board;
     @Getter

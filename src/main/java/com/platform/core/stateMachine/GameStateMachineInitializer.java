@@ -1,6 +1,6 @@
 package com.platform.core.stateMachine;
 
-import com.colorify.game.mechanics.AbstractBaseGame;
+import com.platform.core.game.AbstractBaseGame;
 import com.colorify.game.utilities.Constants;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;

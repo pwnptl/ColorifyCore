@@ -1,11 +1,12 @@
-package com.colorify.game.mechanics;
+package com.platform.core.game;
 
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.stateMachine.StateMachine;
 import lombok.Getter;
 
-
+@Getter
 public abstract class AbstractBaseGame {
+    protected String id;
 
     protected StateMachine stateMachine;
     protected GameConfiguration gameConfiguration;
