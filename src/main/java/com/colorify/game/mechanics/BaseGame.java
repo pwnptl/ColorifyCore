@@ -4,13 +4,10 @@ import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.Palette;
 import com.colorify.game.mechanics.player.ColorifyPlayerBuilder;
 import com.colorify.game.utilities.GameConfiguration;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.player.Player;
 import com.platform.core.player.PlayerBuilder;
-import com.platform.core.stateMachine.StateMachine;
 import com.platform.core.utility.Logger;
-import com.platform.core.utility.ObjectJsonConverter;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
@@ -29,13 +26,8 @@ public class BaseGame extends AbstractBaseGame {
 
     private int maxPlayerCount;
 
-    @Override
-    public String getData() {
-        try {
-            return ObjectJsonConverter.toJSON(board);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    public BaseGame() {
+        init();
     }
 
     @Override
@@ -46,7 +38,6 @@ public class BaseGame extends AbstractBaseGame {
         palette = new Palette(gameConfiguration);
         maxPlayerCount = gameConfiguration.getNumberOfPlayers();
         players = new ArrayList<>();
-        stateMachine = new StateMachine(this);
     }
 
     @Override

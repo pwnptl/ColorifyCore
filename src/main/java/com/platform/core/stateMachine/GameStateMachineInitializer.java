@@ -1,10 +1,9 @@
 package com.platform.core.stateMachine;
 
-import com.platform.core.game.AbstractBaseGame;
-import com.colorify.game.utilities.Constants;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.errors.NotImplementedError;
+import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.utility.Logger;
 import lombok.Getter;
 
@@ -28,9 +27,9 @@ public class GameStateMachineInitializer {
     }
 
     private void setStates() throws IllegalStateError {
-        for (String stateName : gameConfiguration.getStates()) {
-            stateMachine.addState(stateName);
-        }
-        stateMachine.setTerminalState(Constants.states.get(Constants.states.size() - 1));
+//        for (String stateName : gameConfiguration.getStates()) {
+//            stateMachine.addState(stateName);
+//        }
+//        stateMachine.setTerminalState(Constants.states.get(Constants.states.size() - 1));
     }
 }
