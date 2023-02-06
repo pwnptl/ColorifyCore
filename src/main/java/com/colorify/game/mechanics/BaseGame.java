@@ -2,8 +2,11 @@ package com.colorify.game.mechanics;
 
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
+import com.colorify.game.mechanics.scoreTracker.ColorifyScoreTracker;
 import com.colorify.game.utilities.GameConfiguration;
+import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
+import com.platform.core.game.GameState;
 import com.platform.core.game.ScoreTracker;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
@@ -12,18 +15,16 @@ import java.util.ArrayList;
 
 @Getter
 public class BaseGame extends AbstractBaseGame {
-    @Getter
     private Board board;
-    @Getter
     private ColorifyPalette palette;
-
-    @Getter private ScoreTracker scoreTracker;
-    @Getter
+    private ScoreTracker scoreTracker;
     private ArrayList<String> playerIds;
+    private GameState state;
 
     private int maxPlayerCount;
 
     public BaseGame() {
+        state = GameState.NOT_INITIALIZED;
         init();
     }
 
@@ -35,11 +36,23 @@ public class BaseGame extends AbstractBaseGame {
         palette = new ColorifyPalette(gameConfiguration);
         maxPlayerCount = gameConfiguration.getNumberOfPlayers();
         playerIds = new ArrayList<>();
+        scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
+        state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
     }
 
     @Override
-    public void addPlayer(String playerId) {
+    public String addPlayer(String playerId) throws IllegalStateError {
+        if (!GameState.WAITING_FOR_PLAYERS_TO_JOIN.equals(state)) {
+            throw new IllegalStateError("game not in desired state for adding player");
+        }
+        for(String id: playerIds)
+            if(id.equals(playerId))
+                throw new IllegalArgumentException("Player Already Present");
         playerIds.add(playerId);
+        if (playerIds.size() == maxPlayerCount) {
+            state = GameState.ALL_PLAYER_JOINED;
+        }
+        return state.getValue();
     }
 
     @Override
@@ -76,5 +89,4 @@ public class BaseGame extends AbstractBaseGame {
     public void terminate() {
 
     }
-
 }

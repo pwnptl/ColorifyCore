@@ -1,6 +1,7 @@
 package com.platform.core.game;
 
 import com.colorify.game.utilities.GameConfiguration;
+import com.platform.core.errors.IllegalStateError;
 import lombok.Getter;
 
 @Getter
@@ -10,7 +11,7 @@ public abstract class AbstractBaseGame {
 
     public abstract void init();
 
-    public abstract void addPlayer(String name);
+    public abstract String addPlayer(String name) throws IllegalStateError;
 
     public abstract void start();
 

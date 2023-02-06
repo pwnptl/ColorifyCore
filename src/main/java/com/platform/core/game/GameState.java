@@ -2,9 +2,11 @@ package com.platform.core.game;
 
 import lombok.Getter;
 
-public enum GameStates {
+public enum GameState {
+    NOT_INITIALIZED("not_initialized"),
     INITIALIZED("initialized"),
-    WAITING_FOR_PLAYERS("waiting_for_players_to_join"),
+    WAITING_FOR_PLAYERS_TO_JOIN("waiting_for_players_to_join"),
+    ALL_PLAYER_JOINED("all_player_joined"),
     START("start"),
     WAITING_FOR_PLAYER_MOVE("waiting_for_player_move"),
     MAKE_MOVE("make_move"),
@@ -17,7 +19,7 @@ public enum GameStates {
     @Getter
     private String value;
 
-    GameStates(String value) {
+    GameState(String value) {
         this.value = value;
     }
 
