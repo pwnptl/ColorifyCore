@@ -9,5 +9,8 @@ public final class Constants {
         public static String DB_NAME = "Colorify";
         public static String PLAYER_TABLE_NAME = "User";
         public static String GAME_COLLECTION_NAME = "Game";
+
+        public static String _id = "_id";
+        public static String _data = "data";
     }
 }

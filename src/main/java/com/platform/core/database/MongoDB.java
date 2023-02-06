@@ -31,11 +31,13 @@ class MongoDB extends AbstractDatabase {
     private MongoCollection<Document> playerCollection;
     private MongoCollection<Document> gameCollection;
 
-    protected MongoDB() { init(); }
+    protected MongoDB() {
+        init();
+    }
 
     @Override
     public void init() {
-        Logger.info("mongo init");
+        Logger.info("DB: mongo init");
         MongoClient mongoClient = MongoClients.create(Constants.DBConstants.DB_URI);
         CodecRegistry pojoCodecRegistry = org.bson.codecs.configuration.CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), org.bson.codecs.configuration.CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
@@ -46,13 +48,15 @@ class MongoDB extends AbstractDatabase {
     }
 
     @Override
-    public boolean putPlayer(@NonNull final String id, final Player data) {
-        return put(playerCollection, id, data);
+    public boolean putPlayer(@NonNull final String playerId, final Player data) {
+        Logger.info("DB: Putting Player :" + playerId);
+        return put(playerCollection, playerId, data);
     }
 
     @Override
-    public boolean putGame(@NonNull String id, AbstractBaseGame data) {
-        return put(gameCollection, id, data);
+    public boolean putGame(@NonNull String gameId, AbstractBaseGame data) {
+        Logger.info("DB: Putting Game :" + gameId);
+        return put(gameCollection, gameId, data);
     }
 
     @Override
@@ -61,9 +65,10 @@ class MongoDB extends AbstractDatabase {
     }
 
     @Override
-    public AbstractBaseGame queryGame(String id, Class<BaseGame> gameClass) {
+    public AbstractBaseGame queryGame(String gameId, Class<BaseGame> gameClass) {
+        Logger.info("DB: Querying Game :" + gameId);
         Gson gson = new Gson();
-        Document document = query(gameCollection, id);
+        Document document = query(gameCollection, gameId);
         return gson.fromJson(document.toJson(), gameClass);
     }
 
@@ -74,6 +79,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public boolean updateGame(String gameId, BaseGame game) {
+        Logger.info("DB: Updating Game :" + gameId);
         return update(gameCollection, gameId, game);
     }
 
@@ -88,18 +94,20 @@ class MongoDB extends AbstractDatabase {
     }
 
     private boolean put(final MongoCollection<Document> collection, final String id, final Object data) {
-        Document document = new Document().append("_id", id).append("data", data);
+        Document document = new Document()
+                .append(Constants.DBConstants._id, id)
+                .append(Constants.DBConstants._data, data);
         InsertOneResult result = collection.insertOne(document);
         return result.wasAcknowledged();
     }
 
     private Document query(final MongoCollection<Document> collection, final String id) {
-        return collection.find(eq("_id", id)).first();
+        return collection.find(eq(Constants.DBConstants._id, id)).first();
     }
 
     private boolean update(MongoCollection<Document> collection, String id, Object data) {
-        Document document = new Document().append("_id", id);
-        Bson updates = Updates.set("data",data);
+        Document document = new Document().append(Constants.DBConstants._id, id);
+        Bson updates = Updates.set(Constants.DBConstants._data, data);
         UpdateResult result = collection.updateOne(document, updates);
         return result.wasAcknowledged();
     }
