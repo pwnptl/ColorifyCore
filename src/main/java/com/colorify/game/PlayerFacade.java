@@ -7,7 +7,11 @@ import lombok.NonNull;
 
 public class PlayerFacade {
 
-    final AbstractDatabase database = AbstractDatabase.getInstance();
+    private final AbstractDatabase database;
+
+    public PlayerFacade() {
+        database = AbstractDatabase.getInstance();
+    }
 
     public String createPlayer(@NonNull String name) {
         Player player = new HumanPlayer(name);

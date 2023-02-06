@@ -6,8 +6,12 @@ import com.platform.core.game.AbstractBaseGame;
 
 public class GameFacade {
 
-    final AbstractDatabase database = AbstractDatabase.getInstance();
+    private final AbstractDatabase database;
 
+    public GameFacade()
+    {
+        database = AbstractDatabase.getInstance();
+    }
     public String initGame() {
         AbstractBaseGame baseGame = new BaseGame();
 
