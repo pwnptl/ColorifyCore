@@ -22,8 +22,6 @@ class GameStateMachineInitializerTest {
         private GameStateMachineInitializer gameInitializer;
         private AbstractBaseGame baseGame;
 
-        private static Logger logger = new Logger();
-
         public TestRunner newGameInit() {
             baseGame = new BaseGame();
             gameInitializer = new GameStateMachineInitializer();
@@ -36,7 +34,7 @@ class GameStateMachineInitializerTest {
         }
 
         public void printStateMachine() {
-            logger.info(gameInitializer.getStateMachine().getStates().toString());
+            Logger.info(gameInitializer.getStateMachine().getStates().toString());
         }
     }
 

@@ -22,8 +22,6 @@ import org.bson.codecs.pojo.PojoCodecProvider;
  */
 class MongoDB extends AbstractDatabase {
 
-    private final Logger logger = new Logger();
-
     private MongoDatabase database;
     private MongoCollection<Document> playerCollection;
     private MongoCollection<Document> gameCollection;
@@ -32,7 +30,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public void init() {
-        logger.info("mongo init");
+        Logger.info("mongo init");
         MongoClient mongoClient = MongoClients.create(Constants.DBConstants.DB_URI);
         CodecRegistry pojoCodecRegistry = org.bson.codecs.configuration.CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), org.bson.codecs.configuration.CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 

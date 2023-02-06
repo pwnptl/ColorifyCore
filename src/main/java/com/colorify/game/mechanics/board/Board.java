@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class Board {
 
-    private static Logger logger = new Logger();
-
     @Getter
     private ArrayList<ArrayList<BoardCell>> grid;
     private int rows;
@@ -37,8 +35,8 @@ public class Board {
             }
             grid.add(row);
         }
-        logger.info("created Board with rows " + rows + ", and cols " + cols);
-        logger.info("created Board " + grid.toString());
+        Logger.info("created Board with rows " + rows + ", and cols " + cols);
+        Logger.info("created Board " + grid.toString());
     }
 
     public BoardCell getCell(final int r, final int c) {

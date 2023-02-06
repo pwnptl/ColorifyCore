@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 public class StateMachine {
-    private static Logger logger = new Logger();
+    private final Logger logger = new Logger();
     @Getter
     private final ArrayList<State> states;
 

@@ -7,7 +7,6 @@ import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.player.Player;
 import com.platform.core.player.PlayerBuilder;
-import com.platform.core.utility.Logger;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
@@ -15,7 +14,6 @@ import java.util.ArrayList;
 
 @Getter
 public class BaseGame extends AbstractBaseGame {
-    private static Logger logger = new Logger();
     @Getter
     private Board board;
     @Getter
