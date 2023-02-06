@@ -1,5 +1,10 @@
 package com.platform.core.game;
 
-public abstract class ScoreTracker {
+import lombok.Getter;
 
+import java.util.Map;
+
+@Getter
+public abstract class ScoreTracker {
+    protected Map<String, Score> scores;
 }
