@@ -1,12 +1,10 @@
 package com.colorify.game.mechanics;
 
 import com.colorify.game.mechanics.board.Board;
-import com.colorify.game.mechanics.palette.Palette;
-import com.colorify.game.mechanics.player.ColorifyPlayerBuilder;
+import com.colorify.game.mechanics.palette.ColorifyPalette;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.game.AbstractBaseGame;
-import com.platform.core.player.Player;
-import com.platform.core.player.PlayerBuilder;
+import com.platform.core.game.ScoreTracker;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
@@ -17,10 +15,11 @@ public class BaseGame extends AbstractBaseGame {
     @Getter
     private Board board;
     @Getter
-    private Palette palette;
+    private ColorifyPalette palette;
 
+    @Getter private ScoreTracker scoreTracker;
     @Getter
-    private ArrayList<Player> players;
+    private ArrayList<String> playerIds;
 
     private int maxPlayerCount;
 
@@ -33,17 +32,14 @@ public class BaseGame extends AbstractBaseGame {
         id = RandomGenerator.getInstance().getUUID();
         gameConfiguration = new GameConfiguration();
         board = new Board(gameConfiguration);
-        palette = new Palette(gameConfiguration);
+        palette = new ColorifyPalette(gameConfiguration);
         maxPlayerCount = gameConfiguration.getNumberOfPlayers();
-        players = new ArrayList<>();
+        playerIds = new ArrayList<>();
     }
 
     @Override
-    public void addPlayer(String name) {
-
-        PlayerBuilder playerBuilder = new ColorifyPlayerBuilder();
-        Player player = playerBuilder.buildHuman(name);
-        players.add(player);
+    public void addPlayer(String playerId) {
+        playerIds.add(playerId);
     }
 
     @Override

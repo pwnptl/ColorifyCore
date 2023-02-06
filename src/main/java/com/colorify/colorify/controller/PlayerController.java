@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PlayerController {
 
     @Autowired
-    PlayerFacade playerFacade; // todp: take via @autowired.
+    PlayerFacade playerFacade;
 
     @GetMapping("/createPlayer")
     public String createPlayer(@RequestParam(value = "name", defaultValue = "World") String name) {

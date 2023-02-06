@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class GameController {
 
     @Autowired
-    GameFacade gameFacade; // todp: take via @autowired.
+    GameFacade gameFacade;
 
     @GetMapping("/init")
     public String init(@RequestParam(value = "myName", defaultValue = "World") String name) {
