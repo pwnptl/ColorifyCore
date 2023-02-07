@@ -1,6 +1,6 @@
 package com.colorify.game.mechanics.player;
 
-import com.colorify.game.mechanics.cell.BoardCell;
+import com.platform.core.game.BoardCell;
 import com.platform.core.player.HumanPlayer;
 
 public class ColorifyHumanPlayer extends HumanPlayer {

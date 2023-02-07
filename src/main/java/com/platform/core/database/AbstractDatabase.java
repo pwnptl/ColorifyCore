@@ -4,22 +4,27 @@ import com.colorify.game.mechanics.BaseGame;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.player.Player;
 
+import java.util.Map;
+
 public abstract class AbstractDatabase {
 
     protected static AbstractDatabase instance;
 
     protected AbstractDatabase() {
-        init();
     }
 
-    public static AbstractDatabase getInstance() {
+    protected AbstractDatabase(final Map<Class, Object> typeAdapters) {
+        init(typeAdapters);
+    }
+
+    public static AbstractDatabase getInstance(final Map<Class, Object> typeAdapters) {
         if (instance == null)
-            instance = new MongoDB(); // todo: initiate via Config.
+            instance = new MongoDB(typeAdapters); // todo: initiate via Config.
         return instance;
     }
 
 
-    public abstract void init();
+    public abstract void init(Map<Class, Object> typeAdapters);
 
     // scalability issue ??? -> can we segregate MODELS from DB_OPERATIONS ??
     public abstract boolean putPlayer(final String id, final Player data);

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public abstract class AbstractBaseGame {
-    protected String id;
+    protected String gameId;
     protected GameConfiguration gameConfiguration;
 
     public abstract void init();

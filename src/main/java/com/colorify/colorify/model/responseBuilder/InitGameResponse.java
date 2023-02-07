@@ -18,7 +18,7 @@ public class InitGameResponse {
     private final ArrayList<String> getPlayers;
 
     public InitGameResponse(final BaseGame baseGame) {
-        this.gameId = baseGame.getId();
+        this.gameId = baseGame.getGameId();
         this.currentPlayerCount = baseGame.getPlayerIds().size();
         this.maxPlayerCount = baseGame.getMaxPlayerCount();
         this.board = baseGame.getBoard();

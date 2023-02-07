@@ -1,6 +1,6 @@
 package com.colorify.game.mechanics.board;
 
-import com.colorify.game.mechanics.cell.BoardCell;
+import com.platform.core.game.BoardCell;
 import com.colorify.game.mechanics.cell.IntegerBoardCell;
 import com.colorify.game.utilities.Constants;
 import com.colorify.game.utilities.GameConfiguration;
@@ -31,7 +31,7 @@ public class Board {
         for (int r = 0; r < rows; ++r) {
             ArrayList<BoardCell> row = new ArrayList<BoardCell>(cols);
             for (int c = 0; c < cols; ++c) {
-                row.add(new IntegerBoardCell(gameConfiguration.getColourCount()));
+                row.add(new IntegerBoardCell(gameConfiguration));
             }
             grid.add(row);
         }
