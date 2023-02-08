@@ -19,4 +19,8 @@ public class PlayerFacade extends BaseFacade {
         database.putPlayer(player.getId(), player);
         return player.getId();
     }
+
+    public Player getPlayer(@NonNull String playerId){
+        return (Player) database.queryPlayer(playerId);
+    }
 }

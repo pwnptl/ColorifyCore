@@ -30,7 +30,7 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void init() {
-        id = RandomGenerator.getInstance().getUUID();
+        gameId = RandomGenerator.getInstance().getUUID();
         gameConfiguration = new GameConfiguration();
         board = new Board(gameConfiguration);
         palette = new ColorifyPalette(gameConfiguration);

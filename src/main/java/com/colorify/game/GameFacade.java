@@ -1,6 +1,6 @@
 package com.colorify.game;
 
-import com.colorify.colorify.model.responseBuilder.InitGameResponse;
+import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.mechanics.BaseGame;
 import com.platform.core.database.AbstractDatabase;
@@ -21,7 +21,7 @@ public class GameFacade extends BaseFacade {
     public String initGame() {
         AbstractBaseGame baseGame = new BaseGame();
         database.putGame(baseGame.getGameId(), baseGame);
-        InitGameResponse response = new InitGameResponse((BaseGame) baseGame);
+        GameDataResponse response = new GameDataResponse((BaseGame) baseGame);
         return ObjectJsonConverter.toJSON(response);
     }
 

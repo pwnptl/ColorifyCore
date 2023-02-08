@@ -12,12 +12,13 @@ import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.platform.core.game.AbstractBaseGame;
+import com.platform.core.player.HumanPlayer;
 import com.platform.core.player.Player;
 import com.platform.core.utility.Constants;
 import com.platform.core.utility.Logger;
-import com.platform.core.utility.ObjectJsonConverter;
 import lombok.NonNull;
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
@@ -48,13 +49,17 @@ class MongoDB extends AbstractDatabase {
     public void init(final Map<Class, Object> typeAdapters) {
         Logger.info("DB: mongo init");
         MongoClient mongoClient = MongoClients.create(Constants.DBConstants.DB_URI);
-        CodecRegistry pojoCodecRegistry = org.bson.codecs.configuration.CodecRegistries.fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), org.bson.codecs.configuration.CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
+
+        CodecRegistry pojoCodecRegistry =
+                CodecRegistries.fromRegistries(
+                        MongoClientSettings.getDefaultCodecRegistry(),
+                        CodecRegistries.fromProviders(PojoCodecProvider.builder().automatic(true).build()));
 
         database = mongoClient.getDatabase(Constants.DBConstants.DB_NAME).withCodecRegistry(pojoCodecRegistry);
         playerCollection = database.getCollection(Constants.DBConstants.PLAYER_TABLE_NAME);
         gameCollection = database.getCollection(Constants.DBConstants.GAME_COLLECTION_NAME);
 
-        addTypeAdapters(typeAdapters);
+        initializeGsonWithTypeAdapters(typeAdapters);
     }
 
     @Override
@@ -70,8 +75,11 @@ class MongoDB extends AbstractDatabase {
     }
 
     @Override
-    public Player queryPlayer(String id) {
-        return null;
+    public Player queryPlayer(String playerId) {
+        Logger.info("DB: Querying Player :" + playerId);
+
+        Document playerDocument = query(playerCollection, playerId);
+        return gson.fromJson(playerDocument.toJson(), HumanPlayer.class); // todo: take this from Player::getPlayer
     }
 
     @Override
@@ -79,12 +87,8 @@ class MongoDB extends AbstractDatabase {
         Logger.info("DB: Querying Game :" + gameId);
 
         Document document = query(gameCollection, gameId);
-        Logger.info("json1\n" + document.get(Constants.DBConstants._data));
-        BaseGame temp = gson.fromJson(((Document) document.get(Constants.DBConstants._data)).toJson(), gameClass);
-        Logger.info("json2\n" + ObjectJsonConverter.toJSON(temp));
-        Logger.info("json3\n" + ((Document) document.get(Constants.DBConstants._data)).toJson());
 
-        return temp;
+        return gson.fromJson(document.toJson(), gameClass);
     }
 
     @Override
@@ -117,7 +121,8 @@ class MongoDB extends AbstractDatabase {
     }
 
     private Document query(final MongoCollection<Document> collection, final String id) {
-        return collection.find(eq(Constants.DBConstants._id, id)).first();
+        Document queryResult = collection.find(eq(Constants.DBConstants._id, id)).first();
+        return (Document) queryResult.get(Constants.DBConstants._data);
     }
 
     private boolean update(MongoCollection<Document> collection, String id, Object data) {
@@ -127,7 +132,7 @@ class MongoDB extends AbstractDatabase {
         return result.wasAcknowledged();
     }
 
-    private void addTypeAdapters(final Map<Class, Object> typeAdapters) {
+    private void initializeGsonWithTypeAdapters(final Map<Class, Object> typeAdapters) {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         for (Map.Entry<Class, Object> pair : typeAdapters.entrySet()) {
