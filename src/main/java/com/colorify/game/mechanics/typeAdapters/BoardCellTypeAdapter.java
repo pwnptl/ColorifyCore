@@ -1,26 +1,26 @@
 package com.colorify.game.mechanics.typeAdapters;
 
-import com.colorify.game.mechanics.cell.IntegerBoardCell;
+import com.colorify.game.mechanics.cell.IntegerCell;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.platform.core.game.BoardCell;
+import com.platform.core.game.Cell;
 
 import java.io.IOException;
 
-public class BoardCellTypeAdapter extends TypeAdapter<BoardCell> {
+public class BoardCellTypeAdapter extends TypeAdapter<Cell> {
     @Override
-    public void write(JsonWriter out, BoardCell value) throws IOException {
+    public void write(JsonWriter out, Cell value) throws IOException {
 
     }
 
     @Override
-    public BoardCell read(JsonReader in) throws IOException {
-        BoardCell boardCell = null;
+    public Cell read(JsonReader in) throws IOException {
+        Cell boardCell = null;
         in.beginObject();
         if (in.hasNext()) {
             String name = in.nextName();
-            boardCell = new IntegerBoardCell(in.nextInt());
+            boardCell = new IntegerCell(in.nextInt());
         }
         in.endObject();
         return boardCell;

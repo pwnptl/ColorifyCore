@@ -33,7 +33,7 @@ public class BaseGame extends AbstractBaseGame {
         gameId = RandomGenerator.getInstance().getUUID();
         gameConfiguration = new GameConfiguration();
         board = new Board(gameConfiguration);
-        palette = new ColorifyPalette(gameConfiguration);
+        palette = new ColorifyPalette(board, gameConfiguration);
         maxPlayerCount = gameConfiguration.getNumberOfPlayers();
         playerIds = new ArrayList<>();
         scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
