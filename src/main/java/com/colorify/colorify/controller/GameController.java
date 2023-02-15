@@ -22,4 +22,12 @@ public class GameController {
     public String addPlayer(@PathVariable(value = "gameId") String gameId, @RequestParam(value = "playerId", required = false) String playerId) {
         return gameFacade.addPlayer(gameId, playerId);
     }
+    @GetMapping("{gameId}/makeMove/{playerId}/move/{moveNumber}")
+    public String makeMove(@PathVariable(value = "gameId", required = true) String gameId,
+                           @PathVariable(value = "moveNumber", required = true) String moveNo,
+                           @PathVariable(value = "playerId", required = true) String playerId) {
+        return gameFacade.moveNumber(gameId, playerId, moveNo);
+    }
+
+
 }
