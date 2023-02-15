@@ -7,7 +7,7 @@ public enum GameState {
     INITIALIZED("initialized"),
     WAITING_FOR_PLAYERS_TO_JOIN("waiting_for_players_to_join"),
     ALL_PLAYER_JOINED("all_player_joined"),
-    START("start"),
+    START("ready_to_start"),
     WAITING_FOR_PLAYER_MOVE("waiting_for_player_move"),
     MAKE_MOVE("make_move"),
     VALIDATE_GAME("validate_game"),

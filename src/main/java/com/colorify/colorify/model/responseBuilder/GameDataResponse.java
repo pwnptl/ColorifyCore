@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @Getter
 public class GameDataResponse {
 
+    private final String message;
     private final String gameId;
     private final int currentPlayerCount;
     private final int maxPlayerCount;
@@ -24,16 +25,16 @@ public class GameDataResponse {
     private final GameState state;
     private final List<Player> players;
 
-    public GameDataResponse(final BaseGame baseGame) {
+    public GameDataResponse(final BaseGame baseGame, String message) {
         this.gameId = baseGame.getGameId();
         this.currentPlayerCount = baseGame.getPlayerIds().size();
-
         this.maxPlayerCount = baseGame.getMaxPlayerCount();
         this.board = baseGame.getBoard();
         this.palette = baseGame.getPalette();
         this.players = getPlayers(baseGame.getPlayerIds());
         this.scoreTracker = baseGame.getScoreTracker();
         this.state = baseGame.getState();
+        this.message = message;
     }
 
     private List<Player> getPlayers(ArrayList<String> playerIds) {

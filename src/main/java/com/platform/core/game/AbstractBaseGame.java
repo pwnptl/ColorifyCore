@@ -14,7 +14,7 @@ public abstract class AbstractBaseGame {
 
     public abstract String addPlayer(String name) throws IllegalStateError;
 
-    public abstract void start();
+    public abstract String start() throws IllegalStateError;
 
     public abstract void makeMove(Player playerId, Cell moveNo);
 

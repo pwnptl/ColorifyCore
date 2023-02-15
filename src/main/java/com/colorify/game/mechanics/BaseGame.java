@@ -63,15 +63,19 @@ public class BaseGame extends AbstractBaseGame {
     }
 
     @Override
-    public void start() {
+    public String start() throws IllegalStateError {
+        if (!GameState.ALL_PLAYER_JOINED.equals(state))
+            throw new IllegalStateError("game not in desired state:");
+        else state = GameState.START;
+
         assignCoordinates();
         populateScoreTracker();
+        return state.getValue();
     }
 
     @Override
     public void makeMove(Player player, Cell moveNo) {
         history.saveMove(player, moveNo);
-
 
 
     }
