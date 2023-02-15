@@ -2,6 +2,7 @@ package com.platform.core.game;
 
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
+import com.platform.core.player.Player;
 import lombok.Getter;
 
 @Getter
@@ -15,7 +16,7 @@ public abstract class AbstractBaseGame {
 
     public abstract void start();
 
-    public abstract void makeMove();
+    public abstract void makeMove(Player playerId, Cell moveNo);
 
     public abstract void waitForOpponent();
 
