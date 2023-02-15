@@ -6,8 +6,10 @@ import com.colorify.game.mechanics.scoreTracker.ColorifyScoreTracker;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
+import com.platform.core.game.Cell;
 import com.platform.core.game.GameState;
 import com.platform.core.game.ScoreTracker;
+import com.platform.core.player.Player;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
@@ -19,7 +21,10 @@ public class BaseGame extends AbstractBaseGame {
     private ColorifyPalette palette;
     private ScoreTracker scoreTracker;
     private ArrayList<String> playerIds;
+    private ArrayList<Cell> playerCells;
     private GameState state;
+
+    private BaseGameHistory history;
 
     private int maxPlayerCount;
 
@@ -34,10 +39,12 @@ public class BaseGame extends AbstractBaseGame {
         gameConfiguration = new GameConfiguration();
         board = new Board(gameConfiguration);
         palette = new ColorifyPalette(board, gameConfiguration);
-        maxPlayerCount = gameConfiguration.getNumberOfPlayers();
+        maxPlayerCount = gameConfiguration.getPlayerCount();
         playerIds = new ArrayList<>();
         scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
         state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
+        history = new BaseGameHistory(this);
+        playerCells = new ArrayList<>();
     }
 
     @Override
@@ -45,8 +52,8 @@ public class BaseGame extends AbstractBaseGame {
         if (!GameState.WAITING_FOR_PLAYERS_TO_JOIN.equals(state)) {
             throw new IllegalStateError("game not in desired state for adding player");
         }
-        for(String id: playerIds)
-            if(id.equals(playerId))
+        for (String id : playerIds)
+            if (id.equals(playerId))
                 throw new IllegalArgumentException("Player Already Present");
         playerIds.add(playerId);
         if (playerIds.size() == maxPlayerCount) {
@@ -57,11 +64,15 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void start() {
-
+        assignCoordinates();
+        populateScoreTracker();
     }
 
     @Override
-    public void makeMove() {
+    public void makeMove(Player player, Cell moveNo) {
+        history.saveMove(player, moveNo);
+
+
 
     }
 
@@ -89,4 +100,15 @@ public class BaseGame extends AbstractBaseGame {
     public void terminate() {
 
     }
+
+    private void populateScoreTracker() {
+
+    }
+
+    private void assignCoordinates() {
+        playerCells.add(board.getCell(0, 0));
+        playerCells.add(board.getCell(board.getRows() - 1, board.getCols() - 1));
+    }
+
+
 }
