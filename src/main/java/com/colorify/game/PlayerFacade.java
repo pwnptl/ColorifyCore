@@ -5,7 +5,9 @@ import com.platform.core.database.AbstractDatabase;
 import com.platform.core.player.HumanPlayer;
 import com.platform.core.player.Player;
 import lombok.NonNull;
+import org.springframework.stereotype.Component;
 
+@Component
 public class PlayerFacade extends BaseFacade {
 
     private final AbstractDatabase database;
