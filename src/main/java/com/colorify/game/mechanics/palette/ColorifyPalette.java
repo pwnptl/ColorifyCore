@@ -18,9 +18,8 @@ public class ColorifyPalette extends Palette {
     private final int colorCount;
 
     public ColorifyPalette(final Board board, final GameConfiguration gameConfiguration) {
-        colorCount = gameConfiguration.getColourCount() - gameConfiguration.getNumberOfPlayers();
+        colorCount = gameConfiguration.getPaletteColourCount();
         paletteCells = new ArrayList<Cell>();
-
         addAllCellsIntoPalette(gameConfiguration);
         removeAlreadyPresentCells(board);
     }
@@ -28,17 +27,15 @@ public class ColorifyPalette extends Palette {
     private void removeAlreadyPresentCells(Board board) {
         List<Cell> presentCells =
                 Arrays.asList(board.getCell(0, 0), board.getCell(board.getRows() - 1, board.getCols() - 1));
-        for(Cell boardCell : presentCells)
-        {
-            paletteCells.removeIf(paletteCell -> boardCell.getCell() == paletteCell.getCell());
+        for (Cell boardCell : presentCells) {
+            paletteCells.removeIf(paletteCell -> boardCell.getCellValue() == paletteCell.getCellValue());
         }
 
     }
 
     private void addAllCellsIntoPalette(final GameConfiguration gameConfiguration) {
         // add all cells;
-        for (int i= 0; i < gameConfiguration.getColourCount(); ++i)
-        {
+        for (int i = 0; i < gameConfiguration.getColourCount(); ++i) {
             paletteCells.add(new IntegerCell(i));
         }
     }
