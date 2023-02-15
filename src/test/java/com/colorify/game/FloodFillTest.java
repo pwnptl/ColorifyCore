@@ -9,19 +9,28 @@ import com.platform.core.utility.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 class FloodFillTest {
+    // manual check required dur to randomiser.
+    // todo: add concrete UT.
     @Test
     public void testFloodFill4x4() {
-        getBoard(5, 5);
+        performFoolding(4, 4, 3);
     }
 
-    private Board getBoard(int r, int c) {
+
+
+    @Test
+    public void testFloodFill6x6() {
+        performFoolding(6, 6, 8);
+    }
+
+    private Board performFoolding(int r, int c, int iterations) {
         GameConfiguration gameConfiguration = new GameConfiguration(r, c, 2, 4);
         Board board = new Board(gameConfiguration);
 
         printBoard(board);
 
         FloodFill floodFill = new FloodFill();
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < iterations; ++i) {
             Cell prevCell = new IntegerCell(board.getCell(0, 0).getCellValue());
             Cell newCell;
             do {
