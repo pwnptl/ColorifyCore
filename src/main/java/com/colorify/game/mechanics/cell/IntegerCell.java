@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class IntegerCell implements Cell {
     private int cell;
+    private int r;
+    private int c;
 
     public IntegerCell(final int cell) {
         this.cell = cell;
@@ -18,5 +20,17 @@ public class IntegerCell implements Cell {
     public IntegerCell(GameConfiguration gameConfiguration) {
         int modulo = gameConfiguration.getColourCount();
         cell = RandomGenerator.getInstance().getRandNumber(modulo);
+    }
+
+    @Override
+    public void setCoordinate(int r, int c) {
+        this.r = r;
+        this.c = c;
+    }
+
+    @Override
+    public int getCellValue()
+    {
+        return cell;
     }
 }
