@@ -15,9 +15,15 @@ public class GameController {
     GameFacade gameFacade;
 
     @GetMapping("init")
-    public String init(@RequestParam(value = "myName", defaultValue = "World") String name) {
+    public String init() {
         Logger.info("\ninit api called");
         return ObjectJsonConverter.toJSON(gameFacade.initGame());
+    }
+
+    @GetMapping("{gameId}/get")
+    public String init(@PathVariable(value = "gameId") String gameId) {
+        Logger.info("\ninit api called");
+        return gameFacade.get(gameId).replace("\n", "<br/>");
     }
 
     @GetMapping("{gameId}/addPlayer")

@@ -83,7 +83,7 @@ public class BaseGame extends AbstractBaseGame {
 
         floodFill.floodFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()), newCell);
 
-        int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell );
+        int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell);
         updateScoreTracker(count, coordinate);
     }
 
@@ -125,8 +125,8 @@ public class BaseGame extends AbstractBaseGame {
 
     private void populateScoreTracker() {
         FloodFill floodFill = new FloodFill();
-        for(CellCoordinate coordinate : playerCells) {
-            int count1 = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(),coordinate.getC()));
+        for (CellCoordinate coordinate : playerCells) {
+            int count1 = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()));
             Score scorePn = new ColorifyScore(count1);
             scoreTracker.addScore(coordinate.getPlayerId(), scorePn);
         }
@@ -141,5 +141,36 @@ public class BaseGame extends AbstractBaseGame {
         playerCells.get(0).setC(board.getCols() - 1);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("============Board========\n");
+        for (ArrayList<Cell> cellRow : board.getGrid()) {
+            for (Cell cell : cellRow) {
+                stringBuilder.append(cell.getCell()).append(" ");
+            }
+            stringBuilder.append("\n");
+        }
+        stringBuilder.append("\n");
+        stringBuilder.append("\n");
+        stringBuilder.append("===========Palette============\n");
+        for (Cell paletteCell : palette.getPaletteCells()) {
+            stringBuilder.append("\t\t").append(paletteCell.getCell());
+        }
 
+        stringBuilder.append("\n");
+        stringBuilder.append("\n");
+        stringBuilder.append("===========Score============\n");
+        for (CellCoordinate coordinate : playerCells)
+        {
+            stringBuilder.append("id : ").append(coordinate.getPlayerId(), 0, 5).append("\t");
+            stringBuilder.append("r").append(coordinate.getR()).append(" c").append(coordinate.getC()).append("\t");
+            stringBuilder.append("score: " ).append(scoreTracker.getScores().get(coordinate.getPlayerId()));
+            stringBuilder.append("\n");
+        }
+
+        stringBuilder.append("=======================================");
+        stringBuilder.append("\n\n");
+        return stringBuilder.toString();
+    }
 }

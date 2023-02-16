@@ -47,7 +47,6 @@ public class GameFacade extends BaseFacade {
         BaseGame game = null;
         try {
             game = getGame(gameId);
-//        Logger.info("game from DB" + ObjectJsonConverter.toJSON(game));
             game.makeMove(playerId, new IntegerCell(Integer.parseInt(moveNo)));
         } catch (IllegalMoveException e) {
             throw new RuntimeException(e);
@@ -76,12 +75,16 @@ public class GameFacade extends BaseFacade {
 
     private BaseGame getGame(final String gameId) {
         BaseGame game = (BaseGame) database.queryGame(gameId, BaseGame.class);
-        Logger.info("game from DB" + ObjectJsonConverter.toJSON(game));
+        Logger.info("game from DB" + game.toString());
         return game;
     }
 
     private void saveGame(final String gameId, BaseGame game) {
 //        Logger.info("game to DB" + ObjectJsonConverter.toJSON(game));
         database.updateGame(gameId, game);
+    }
+
+    public String get(String gameId) {
+        return getGame(gameId).toString();
     }
 }
