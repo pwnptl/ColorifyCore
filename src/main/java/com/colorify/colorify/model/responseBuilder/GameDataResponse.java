@@ -2,6 +2,7 @@ package com.colorify.colorify.model.responseBuilder;
 
 import com.colorify.game.PlayerFacade;
 import com.colorify.game.mechanics.BaseGame;
+import com.colorify.game.mechanics.CellCoordinate;
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
 import com.platform.core.game.GameState;
@@ -28,19 +29,20 @@ public final class GameDataResponse {
 
     public GameDataResponse(final BaseGame baseGame, String message) {
         this.gameId = baseGame.getGameId();
-        this.currentPlayerCount = baseGame.getPlayerIds().size();
+        this.currentPlayerCount = baseGame.getPlayerCells().size();
         this.maxPlayerCount = baseGame.getMaxPlayerCount();
         this.board = baseGame.getBoard();
         this.palette = baseGame.getPalette();
-        this.players = getPlayers(baseGame.getPlayerIds());
+        this.players = getPlayers(baseGame.getPlayerCells());
         this.scoreTracker = baseGame.getScoreTracker();
         this.state = baseGame.getState();
         this.message = message;
     }
 
-    private List<Player> getPlayers(ArrayList<String> playerIds) {
+    private List<Player> getPlayers(ArrayList<CellCoordinate> playerCoordinates) {
         PlayerFacade playerFacade = new PlayerFacade();
-        return playerIds.stream()
+        return playerCoordinates.stream()
+                .map(CellCoordinate::getPlayerId)
                 .map(playerFacade::getPlayer)
                 .collect(Collectors.toList());
     }

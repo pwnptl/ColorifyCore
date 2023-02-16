@@ -1,12 +1,20 @@
 package com.colorify.game.mechanics.floodfill;
 
 import com.colorify.game.mechanics.board.Board;
+import com.colorify.game.mechanics.cell.IntegerCell;
 import com.platform.core.game.Cell;
 
 public class FloodFill {
 
 
     public void floodFill(final Board board, int r, int c, final Cell prevCell, final Cell newCell) {
+
+        Cell _prevCell = new IntegerCell(prevCell.getCell());
+        Cell _newCell = new IntegerCell(newCell.getCell());
+        _floodFill(board, r, c, _prevCell, _newCell);
+    }
+
+    private void _floodFill(final Board board, int r, int c, final Cell prevCell, final Cell newCell) {
         if (r < 0 || board.getRows() <= r) return;
         if (c < 0 || board.getCols() <= c) return;
 

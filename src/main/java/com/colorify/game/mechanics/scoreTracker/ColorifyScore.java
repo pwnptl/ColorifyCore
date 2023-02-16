@@ -5,4 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ColorifyScore extends Score {
+    public ColorifyScore(int count) {
+        super(count);
+    }
 }

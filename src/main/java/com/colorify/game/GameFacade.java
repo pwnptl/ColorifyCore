@@ -1,5 +1,6 @@
 package com.colorify.game;
 
+import com.colorify.colorify.controller.errors.IllegalMoveException;
 import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.mechanics.BaseGame;
@@ -42,10 +43,15 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public String moveNumber(String gameId, String playerId, String moveNo) {
-        BaseGame game = getGame(gameId);
+    public String makeMove(String gameId, String playerId, String moveNo) {
+        BaseGame game = null;
+        try {
+            game = getGame(gameId);
 //        Logger.info("game from DB" + ObjectJsonConverter.toJSON(game));
-        game.makeMove(getPlayer(playerId), new IntegerCell(Integer.parseInt(moveNo)));
+            game.makeMove(playerId, new IntegerCell(Integer.parseInt(moveNo)));
+        } catch (IllegalMoveException e) {
+            throw new RuntimeException(e);
+        }
         return ObjectJsonConverter.toJSON(game);
     }
 

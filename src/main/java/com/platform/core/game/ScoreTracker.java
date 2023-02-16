@@ -9,4 +9,8 @@ import java.util.Map;
 @Setter
 public abstract class ScoreTracker {
     protected Map<String, Score> scores;
+
+    public void addScore(String playerId, Score score){
+        scores.put(playerId,score);
+    };
 }
