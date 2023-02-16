@@ -13,16 +13,16 @@ class FloodFillTest {
     // todo: add concrete UT.
     @Test
     public void testFloodFill4x4() {
-        performFoolding(4, 4, 3);
+        performFlooding(4, 4, 3);
     }
 
 
     @Test
     public void testFloodFill6x6() {
-        performFoolding(6, 6, 8);
+        performFlooding(6, 6, 8);
     }
 
-    private Board performFoolding(int r, int c, int iterations) {
+    private Board performFlooding(int r, int c, int iterations) {
         GameConfiguration gameConfiguration = new GameConfiguration(r, c, 2, 4);
         Board board = new Board(gameConfiguration);
 
