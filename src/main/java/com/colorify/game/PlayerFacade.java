@@ -18,11 +18,12 @@ public class PlayerFacade extends BaseFacade {
 
     public String createPlayer(@NonNull String name) {
         Player player = new HumanPlayer(name);
-        database.putPlayer(player.getId(), player);
-        return player.getId();
+        database.putPlayer(player.getPlayerId(), player);
+        return player.getPlayerId();
     }
 
     public Player getPlayer(@NonNull String playerId){
-        return (Player) database.queryPlayer(playerId);
+        Player data = database.queryPlayer(playerId);
+        return data;
     }
 }
