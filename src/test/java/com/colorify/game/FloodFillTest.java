@@ -9,13 +9,12 @@ import com.platform.core.utility.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 class FloodFillTest {
-    // manual check required dur to randomiser.
+    // manual check required due to randomiser.
     // todo: add concrete UT.
     @Test
     public void testFloodFill4x4() {
         performFoolding(4, 4, 3);
     }
-
 
 
     @Test
@@ -31,15 +30,15 @@ class FloodFillTest {
 
         FloodFill floodFill = new FloodFill();
         for (int i = 0; i < iterations; ++i) {
-            Cell<Number> prevCell = new IntegerCell(board.getCell(0, 0).getCellValue());
-            Cell<Number> newCell;
+            Cell prevCell = new IntegerCell(board.getCell(0, 0).getCell());
+            Cell newCell;
             do {
                 newCell = new IntegerCell(RandomGenerator.getInstance().getRandNumber(board.getUniqueColors()));
-            } while (newCell.getCellValue() == prevCell.getCellValue());
+            } while (newCell.getCell() == prevCell.getCell());
 
-            assert prevCell.getCellValue() != newCell.getCellValue();
-            System.out.println("OldCell " + prevCell.getCellValue());
-            System.out.println("newCell " + newCell.getCellValue());
+            assert prevCell.getCell() != newCell.getCell();
+            System.out.println("OldCell " + prevCell.getCell());
+            System.out.println("newCell " + newCell.getCell());
             floodFill.floodFill(board, 0, 0, prevCell, newCell);
             int newCount = floodFill.countFill(board, 0, 0, newCell);
             printBoard(board);
@@ -52,7 +51,7 @@ class FloodFillTest {
     private void printBoard(Board board) {
         for (int i = 0; i < board.getRows(); ++i) {
             for (int j = 0; j < board.getCols(); ++j) {
-                System.out.print(board.getCell(i, j).getCellValue() + " ");
+                System.out.print(board.getCell(i, j).getCell() + " ");
             }
             System.out.println();
         }
