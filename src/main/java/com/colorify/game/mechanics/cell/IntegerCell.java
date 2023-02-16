@@ -3,34 +3,26 @@ package com.colorify.game.mechanics.cell;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.game.Cell;
 import com.platform.core.utility.RandomGenerator;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 public class IntegerCell implements Cell {
-    private int cell;
-    private int r;
-    private int c;
+    private int value;
 
     public IntegerCell(final int cell) {
-        this.cell = cell;
+        this.value = cell;
     }
 
     public IntegerCell(GameConfiguration gameConfiguration) {
         int modulo = gameConfiguration.getColourCount();
-        cell = RandomGenerator.getInstance().getRandNumber(modulo);
+        value = RandomGenerator.getInstance().getRandNumber(modulo);
     }
 
     @Override
-    public void setCoordinate(int r, int c) {
-        this.r = r;
-        this.c = c;
+    public void setCell(int cell) {
+        this.value = cell;
     }
 
     @Override
-    public int getCellValue()
-    {
-        return cell;
+    public int getCell() {
+        return value;
     }
 }

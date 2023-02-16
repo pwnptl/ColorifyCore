@@ -28,7 +28,7 @@ public class ColorifyPalette extends Palette {
         List<Cell> presentCells =
                 Arrays.asList(board.getCell(0, 0), board.getCell(board.getRows() - 1, board.getCols() - 1));
         for (Cell boardCell : presentCells) {
-            paletteCells.removeIf(paletteCell -> boardCell.getCellValue() == paletteCell.getCellValue());
+            paletteCells.removeIf(paletteCell -> boardCell.getCell() == paletteCell.getCell());
         }
 
     }

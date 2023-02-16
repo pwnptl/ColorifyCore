@@ -31,8 +31,8 @@ class FloodFillTest {
 
         FloodFill floodFill = new FloodFill();
         for (int i = 0; i < iterations; ++i) {
-            Cell prevCell = new IntegerCell(board.getCell(0, 0).getCellValue());
-            Cell newCell;
+            Cell<Number> prevCell = new IntegerCell(board.getCell(0, 0).getCellValue());
+            Cell<Number> newCell;
             do {
                 newCell = new IntegerCell(RandomGenerator.getInstance().getRandNumber(board.getUniqueColors()));
             } while (newCell.getCellValue() == prevCell.getCellValue());

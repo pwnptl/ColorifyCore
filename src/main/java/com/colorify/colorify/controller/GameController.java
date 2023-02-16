@@ -14,7 +14,7 @@ public class GameController {
     @Autowired
     GameFacade gameFacade;
 
-    @GetMapping("/init")
+    @GetMapping("init")
     public String init(@RequestParam(value = "myName", defaultValue = "World") String name) {
         Logger.info("\ninit api called");
         return ObjectJsonConverter.toJSON(gameFacade.initGame());

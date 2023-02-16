@@ -1,6 +1,5 @@
 package com.platform.core.player;
 
-import com.google.gson.Gson;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
@@ -21,14 +20,4 @@ public abstract class Player {
         this.id = id;
         this.type = type;
     }
-
-    public static Player getPlayer(String toJson, Gson gson) {
-        return null;
-    }
-
-
-    public static Player getPlayer(String playerId) {
-        return null;
-    }
-
 }

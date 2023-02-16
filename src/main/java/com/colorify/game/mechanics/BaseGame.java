@@ -24,7 +24,7 @@ public class BaseGame extends AbstractBaseGame {
     private ArrayList<Cell> playerCells;
     private GameState state;
 
-    private BaseGameHistory history;
+//    private BaseGameHistory history;
 
     private int maxPlayerCount;
 
@@ -43,7 +43,7 @@ public class BaseGame extends AbstractBaseGame {
         playerIds = new ArrayList<>();
         scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
         state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
-        history = new BaseGameHistory(this);
+//        history = new BaseGameHistory(this);
         playerCells = new ArrayList<>();
     }
 
@@ -75,7 +75,6 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void makeMove(Player player, Cell moveNo) {
-        history.saveMove(player, moveNo);
 
 
     }

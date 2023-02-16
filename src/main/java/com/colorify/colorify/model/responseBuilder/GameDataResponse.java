@@ -1,5 +1,6 @@
 package com.colorify.colorify.model.responseBuilder;
 
+import com.colorify.game.PlayerFacade;
 import com.colorify.game.mechanics.BaseGame;
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class GameDataResponse {
+public final class GameDataResponse {
 
     private final String message;
     private final String gameId;
@@ -38,8 +39,9 @@ public class GameDataResponse {
     }
 
     private List<Player> getPlayers(ArrayList<String> playerIds) {
+        PlayerFacade playerFacade = new PlayerFacade();
         return playerIds.stream()
-                .map(Player::getPlayer)
+                .map(playerFacade::getPlayer)
                 .collect(Collectors.toList());
     }
 }

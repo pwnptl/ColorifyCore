@@ -1,5 +1,6 @@
 package com.colorify.colorify;
 
+import com.platform.core.utility.ObjectJsonConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,13 +16,10 @@ public class ColorifyApplication {
         SpringApplication.run(ColorifyApplication.class, args);
     }
 
-
     @RequestMapping(value ="/hello",
             method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
     public String sayHello() {
-        return String.format("{\"Hello\":\"hello\"}");
+        return ObjectJsonConverter.toJSON("hello");
     }
-
-
 }

@@ -30,12 +30,12 @@ public class Board {
             ArrayList<Cell> row = new ArrayList<Cell>(cols);
             for (int c = 0; c < cols; ++c) {
                 Cell cell = new IntegerCell(gameConfiguration);
-                cell.setCoordinate(r, c);
+//                cell.setCoordinate(r, c);
                 row.add(cell);
             }
             grid.add(row);
         }
-        while (grid.get(0).get(0).getCellValue() == grid.get(rows - 1).get(cols - 1).getCellValue()) {
+        while (grid.get(0).get(0).getCell() == grid.get(rows - 1).get(cols - 1).getCell()) {
             grid.get(0).set(0, new IntegerCell(gameConfiguration));
         }
         Logger.info("created Board with rows " + rows + ", and cols " + cols);

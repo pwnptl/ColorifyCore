@@ -1,26 +1,26 @@
 package com.colorify.game.mechanics;
 
-import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.game.Cell;
 import com.platform.core.game.gameHistory.History;
 import com.platform.core.player.Player;
+import lombok.Getter;
 
 import java.util.ArrayList;
 
+@Getter
 public class BaseGameHistory extends History {
-    private AbstractBaseGame initialGame;
-
+    //    private AbstractBaseGame initialGame;
     private ArrayList<Player> playerHistory;
     private ArrayList<Cell> moveHistory;
 
-    public BaseGameHistory(BaseGame baseGame) {
+
+    public BaseGameHistory() {
         super();
-        initialGame = baseGame;
+        initiateGame();
     }
 
     @Override
-    public void initiateGame(AbstractBaseGame baseGame) {
-        this.initialGame = baseGame;
+    public void initiateGame() {
         this.moveHistory = new ArrayList<>();
         this.playerHistory = new ArrayList<>();
     }
