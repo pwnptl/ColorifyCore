@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/game/")
-public class GameController {
+public class GameController extends BaseController {
 
     @Autowired
     GameFacade gameFacade;
@@ -26,8 +26,8 @@ public class GameController {
         return gameFacade.get(gameId).replace("\n", "<br/>");
     }
 
-    @GetMapping("{gameId}/addPlayer")
-    public String addPlayer(@PathVariable(value = "gameId") String gameId, @RequestParam(value = "playerId", required = false) String playerId) {
+    @GetMapping("{gameId}/joinGame/{playerId}")
+    public String joinGame(@PathVariable(value = "gameId") String gameId, @PathVariable(value = "playerId", required = true) String playerId) {
         return ObjectJsonConverter.toJSON(gameFacade.addPlayer(gameId, playerId));
     }
 

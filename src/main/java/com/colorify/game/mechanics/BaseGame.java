@@ -13,6 +13,8 @@ import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class BaseGame extends AbstractBaseGame {
@@ -42,7 +44,6 @@ public class BaseGame extends AbstractBaseGame {
         scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
         state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
 //        history = new BaseGameHistory(this);
-        playerCells = new ArrayList<>();
     }
 
     @Override
@@ -89,6 +90,10 @@ public class BaseGame extends AbstractBaseGame {
 
     private void updateScoreTracker(int count, CellCoordinate coordinate) {
 
+    }
+
+    public List<String> getPlayerIds(){
+        return playerCells.stream().map(CellCoordinate::getPlayerId).collect(Collectors.toList());
     }
 
     private CellCoordinate findPlayer(String playerId) throws IllegalMoveException {
