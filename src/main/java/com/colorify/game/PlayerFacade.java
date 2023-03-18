@@ -23,7 +23,6 @@ public class PlayerFacade extends BaseFacade {
     }
 
     public Player getPlayer(@NonNull String playerId){
-        Player data = database.queryPlayer(playerId);
-        return data;
+        return database.queryPlayer(playerId);
     }
 }

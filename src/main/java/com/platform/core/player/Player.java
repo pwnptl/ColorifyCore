@@ -1,13 +1,20 @@
 package com.platform.core.player;
 
 import com.platform.core.utility.RandomGenerator;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@AllArgsConstructor
 public abstract class Player {
+
     protected String playerId;
     protected String name;
     protected PlayerType type;
+
+    @Setter
+    protected String SessionId;
 
     public Player(final PlayerType type, final String name) {
         this.name = name;
