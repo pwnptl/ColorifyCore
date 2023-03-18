@@ -1,5 +1,6 @@
 package com.platform.core.network;
 
+import com.platform.core.utility.ObjectJsonConverter;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -19,7 +20,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         System.out.println("handleTextMessage" + message.toString());
-        TextMessage textMessage = new TextMessage("Received " + message.getPayload());
+        TextMessage textMessage = new TextMessage(ObjectJsonConverter.dummyJsonResponse());
         session.sendMessage(textMessage);
     }
 
@@ -28,7 +29,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
         sessions.add(session);
         System.out.println("Opening Session " + session.getId());
         System.out.println("Current Sessions " + sessions.stream().map(WebSocketSession::getId).toList());
-        TextMessage textMessage = new TextMessage("Established");
+        TextMessage textMessage = new TextMessage(ObjectJsonConverter.toJSONWithType("UNKNOWN", "Established"));
         session.sendMessage(textMessage);
     }
 
