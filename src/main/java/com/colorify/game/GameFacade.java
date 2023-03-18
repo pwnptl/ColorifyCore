@@ -8,12 +8,18 @@ import com.colorify.game.mechanics.cell.IntegerCell;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
+import com.platform.core.network.MyWebSocketHandler;
 import com.platform.core.player.Player;
 import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
 import lombok.NonNull;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class GameFacade extends BaseFacade {
+
+    MyWebSocketHandler myWebSocketHandler = new MyWebSocketHandler();
 
     private final PlayerFacade playerFacade = new PlayerFacade(); // todo: is this right?
 
@@ -51,7 +57,16 @@ public class GameFacade extends BaseFacade {
         } catch (IllegalMoveException e) {
             throw new RuntimeException(e);
         }
-        return ObjectJsonConverter.toJSON(game);
+        String jsonData = ObjectJsonConverter.toJSON(game);
+        myWebSocketHandler.boradcast(getConnectedSessions(game), jsonData);
+        return jsonData;
+    }
+
+    private List<String> getConnectedSessions(BaseGame game) {
+        return game.getPlayerIds().stream()
+                .map(playerFacade::getPlayer)
+                .map(Player::getSessionId)
+                .collect(Collectors.toList());
     }
 
     public GameDataResponse startGame(final String gameId) {
