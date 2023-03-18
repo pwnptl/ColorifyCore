@@ -16,4 +16,9 @@ public final class Constants {
         public static final String CANNOT_ADD_DUPLICATE_PLAYER = "CANNOT_ADD_DUPLICATE_PLAYER";
 
     }
+
+    public static class ApiMessageTypes {
+
+        public static final String PLAYER_DATA = "PLAYER_DATA";
+    }
 }
