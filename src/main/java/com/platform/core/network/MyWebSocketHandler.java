@@ -1,5 +1,8 @@
 package com.platform.core.network;
 
+import com.platform.core.registry.messageHandler.MessageHandlerRegistry;
+import com.platform.core.registry.messageHandler.MessageHandlerType;
+import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -9,19 +12,29 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetwork {
-    ArrayList<WebSocketSession> sessions;
+    private ArrayList<WebSocketSession> sessions;
+    private final MessageHandlerRegistry messageHandlerRegistry;
 
     public MyWebSocketHandler() {
         sessions = new ArrayList<>();
+        messageHandlerRegistry = MessageHandlerRegistry.getInstance();
     }
 
     @Override
-    public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
-        System.out.println("handleTextMessage" + message.toString());
-        TextMessage textMessage = new TextMessage(ObjectJsonConverter.dummyJsonResponse());
-        session.sendMessage(textMessage);
+    public void handleTextMessage(WebSocketSession session, TextMessage tMessage) throws IOException {
+        String message = tMessage.getPayload();
+        if (ObjectJsonConverter.isJson(message)) {
+            MessageHandlerType type = ObjectJsonConverter.getMessageType(message);
+            Logger.info("WebSocket", "Message received is a json " + message + " and type " + type);
+            Objects.requireNonNull(this.messageHandlerRegistry.get(type))
+                    .handleMessage(message);
+        } else {
+            this.messageHandlerRegistry.get(MessageHandlerType.DEFAULT)
+                    .handleMessage(message);
+        }
     }
 
     @Override
@@ -29,7 +42,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
         sessions.add(session);
         System.out.println("Opening Session " + session.getId());
         System.out.println("Current Sessions " + sessions.stream().map(WebSocketSession::getId).toList());
-        TextMessage textMessage = new TextMessage(ObjectJsonConverter.toJSONWithType("UNKNOWN", "Established"));
+        TextMessage textMessage = new TextMessage(ObjectJsonConverter.toJSONWithType(MessageHandlerType.UNKNOWN.name(), "Established"));
         session.sendMessage(textMessage);
     }
 

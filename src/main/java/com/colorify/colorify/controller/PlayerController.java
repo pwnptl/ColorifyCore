@@ -1,7 +1,7 @@
 package com.colorify.colorify.controller;
 
 import com.colorify.game.PlayerFacade;
-import com.colorify.game.utilities.Constants;
+import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,6 @@ public class PlayerController extends BaseController {
     @GetMapping("/get")
     public String getPlayer(@RequestParam(value = "playerId", defaultValue = "dummyId") String id) {
         Logger.info("\ncreatePlayer api called");
-        return ObjectJsonConverter.toJSONWithType(Constants.ApiMessageTypes.PLAYER_DATA, playerFacade.getPlayer(id));
+        return ObjectJsonConverter.toJSONWithType(MessageHandlerType.PLAYER_DATA.name(), playerFacade.getPlayer(id));
     }
 }

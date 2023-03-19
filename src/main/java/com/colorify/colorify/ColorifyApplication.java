@@ -1,5 +1,6 @@
 package com.colorify.colorify;
 
+import com.platform.core.registry.messageHandler.MessageHandlerRegistry;
 import com.platform.core.utility.ObjectJsonConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,13 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 @RestController
 public class ColorifyApplication {
-
+    private static MessageHandlerRegistry messageHandlerRegistry;
 
     public static void main(String[] args) {
+        initHandlers();
         SpringApplication.run(ColorifyApplication.class, args);
     }
 
-    @RequestMapping(value ="/hello",
+    private static void initHandlers() {
+        // todo : move this init() to post startup in spring usign conventional method.
+        messageHandlerRegistry = MessageHandlerRegistry.getInstance();
+    }
+
+    @RequestMapping(value = "/hello",
             method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
     public String sayHello() {
