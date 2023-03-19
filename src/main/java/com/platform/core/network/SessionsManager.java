@@ -8,13 +8,12 @@ public class SessionsManager {
     private static SessionsManager instance;
     private final ArrayList<WebSocketSession> sessions;
 
-    private SessionsManager()
-    {
+    private SessionsManager() {
         sessions = new ArrayList<>();
     }
 
-    public static SessionsManager getInstance(){
-        if(instance == null)
+    public static SessionsManager getInstance() {
+        if (instance == null)
             instance = new SessionsManager();
         return instance;
     }
