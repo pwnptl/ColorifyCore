@@ -1,5 +1,6 @@
 package com.platform.core.network;
 
+import com.platform.core.utility.Logger;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.ArrayList;
@@ -28,5 +29,14 @@ public class SessionsManager {
 
     public void remove(final WebSocketSession session) {
         sessions.remove(session);
+    }
+
+    public WebSocketSession get(String sessionId) {
+        for (WebSocketSession session : sessions) {
+            if (session.getId().equals(sessionId))
+                return session;
+        }
+        Logger.info(this.getClass().getName(), "session not found : " + sessionId);
+        return null;
     }
 }

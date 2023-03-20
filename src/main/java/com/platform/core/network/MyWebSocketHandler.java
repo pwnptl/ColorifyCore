@@ -30,10 +30,10 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
             MessageHandlerType type = ObjectJsonConverter.getMessageType(message);
             Logger.info("WebSocket", "Message received is a json " + message + " and type " + type);
             Objects.requireNonNull(this.messageHandlerRegistry.get(type))
-                    .handleMessage(message);
+                    .handleMessage(session.getId(), message);
         } else {
             this.messageHandlerRegistry.get(MessageHandlerType.DEFAULT)
-                    .handleMessage(message);
+                    .handleMessage(session.getId(), message);
         }
     }
 
