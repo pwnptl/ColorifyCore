@@ -1,5 +1,6 @@
 package com.platform.core.network;
 
+import com.colorify.game.utilities.Payload;
 import com.platform.core.registry.messageHandler.MessageHandlerRegistry;
 import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
@@ -25,12 +26,14 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage tMessage) throws IOException {
+        Logger.info("textmessage is : " + tMessage.getPayload());
         String message = tMessage.getPayload();
         if (ObjectJsonConverter.isJson(message)) {
-            MessageHandlerType type = ObjectJsonConverter.getMessageType(message);
-            Logger.info("WebSocket", "Message received is a json " + message + " and type " + type);
+            Payload payload = Payload.fromJson(message);
+            MessageHandlerType type = MessageHandlerType.getValue(payload.getMessageType());
+            Logger.info("WebSocket", "Message received is a data " + payload.getMessageData() + " and type " + payload.getMessageType());
             Objects.requireNonNull(this.messageHandlerRegistry.get(type))
-                    .handleMessage(session.getId(), message);
+                    .handleMessage(session.getId(), payload.getMessageData());
         } else {
             this.messageHandlerRegistry.get(MessageHandlerType.DEFAULT)
                     .handleMessage(session.getId(), message);
