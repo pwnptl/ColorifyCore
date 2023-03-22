@@ -13,6 +13,9 @@ public class Logger {
         }
         System.out.println(log + " " + Arrays.toString(new ArrayList[]{strings}));
     }
+    public static void info(String log, String str) {
+        System.out.println(log + " : " + str);
+    }
 
     public static void test(String log) {
         System.out.println(log);
