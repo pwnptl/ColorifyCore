@@ -1,11 +1,21 @@
 package com.colorify.game;
 
 import com.colorify.game.mechanics.BaseFacade;
+import com.colorify.game.request.GetPlayer;
+import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
+import com.platform.core.network.SessionsManager;
 import com.platform.core.player.HumanPlayer;
 import com.platform.core.player.Player;
+import com.platform.core.registry.messageHandler.MessageHandlerInterface;
+import com.platform.core.registry.messageHandler.MessageHandlerType;
+import com.platform.core.utility.ObjectJsonConverter;
+import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.TextMessage;
+
+import java.io.IOException;
 
 @Component
 public class PlayerFacade extends BaseFacade {
@@ -22,7 +32,21 @@ public class PlayerFacade extends BaseFacade {
         return player.getPlayerId();
     }
 
-    public Player getPlayer(@NonNull String playerId){
+    public Player getPlayer(@NonNull String playerId) {
         return database.queryPlayer(playerId);
     }
+
+
+    @Getter
+    private final MessageHandlerInterface getPlayerRequestHandler = new MessageHandlerInterface() {
+        @Override
+        public void handleMessage(String sessionId, String message) throws IOException {
+            GetPlayer getPlayer = RequestResponseHelper.getPlayerIdRequest(message);
+            Player player = getPlayer(getPlayer.getPlayerId());
+
+            String response = ObjectJsonConverter.toJSONWithType(MessageHandlerType.PLAYER_DATA.name(), player);
+
+            SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(response));
+        }
+    };
 }
