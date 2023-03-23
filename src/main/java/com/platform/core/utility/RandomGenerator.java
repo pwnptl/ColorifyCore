@@ -1,10 +1,9 @@
 package com.platform.core.utility;
 
-import com.colorify.game.utilities.Constants;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.time.Instant;
 import java.util.Random;
-import java.util.UUID;
 
 public class RandomGenerator extends Random {
 
@@ -26,6 +25,6 @@ public class RandomGenerator extends Random {
     }
 
     public String getUUID() {
-        return UUID.randomUUID().toString();
+        return RandomStringUtils.randomAlphanumeric(5).toUpperCase();
     }
 }
