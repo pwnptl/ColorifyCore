@@ -24,4 +24,8 @@ public class Logger {
     public static void error(String localizedMessage) {
         System.out.println(localizedMessage);
     }
+
+    public static void debug(String message) {
+        System.out.println(message);
+    }
 }
