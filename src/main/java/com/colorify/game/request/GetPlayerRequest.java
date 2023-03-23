@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetPlayer extends Request {
+public class GetPlayerRequest extends Request {
     String playerId;
 }
