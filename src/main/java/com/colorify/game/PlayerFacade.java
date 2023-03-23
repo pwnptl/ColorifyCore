@@ -1,7 +1,10 @@
 package com.colorify.game;
 
 import com.colorify.game.mechanics.BaseFacade;
-import com.colorify.game.request.GetPlayer;
+import com.colorify.game.request.CreatePlayerRequest;
+import com.colorify.game.request.GetPlayerRequest;
+import com.colorify.game.response.CreatePlayerResponse;
+import com.colorify.game.response.GetPlayerResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.network.Payload;
@@ -43,11 +46,28 @@ public class PlayerFacade extends BaseFacade {
         @Override
         public void handleMessage(String sessionId, String message) throws IOException {
             Logger.info("message = " + message);
-            GetPlayer getPlayer = RequestResponseHelper.getPlayerIdRequest(message);
+            GetPlayerRequest getPlayer = RequestResponseHelper.getPlayerIdRequest(message);
             Player player = getPlayer(getPlayer.getPlayerId());
 
-            String payload = new Payload(MessageHandlerType.PLAYER_DATA.name(), player).asJson();
+            GetPlayerResponse getPlayerResponse = new GetPlayerResponse(player);
+            String payload = new Payload(MessageHandlerType.PLAYER_DATA.name(), getPlayerResponse).asJson();
 
+            Logger.info("response = " + payload);
+            SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+        }
+    };
+
+    @Getter
+    private final MessageHandlerInterface createPlayerRequestHandler = new MessageHandlerInterface() {
+        @Override
+        public void handleMessage(String sessionId, String message) throws IOException {
+            Logger.info("message = " + message);
+            CreatePlayerRequest createPlayerRequest = RequestResponseHelper.createPlayerIdRequest(message);
+
+            String playerId = createPlayer(createPlayerRequest.getName());
+            CreatePlayerResponse createPlayerResponse = new CreatePlayerResponse(playerId);
+
+            String payload = new Payload(MessageHandlerType.PLAYER_CREATED.name(), createPlayerResponse).asJson();
             Logger.info("response = " + payload);
             SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
         }

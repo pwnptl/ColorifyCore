@@ -32,6 +32,7 @@ public class PostBeanInit implements InitializingBean {
         MessageHandlerRegistry messageHandlerRegistry = MessageHandlerRegistry.getInstance();
 
         messageHandlerRegistry.put(MessageHandlerType.GET_PLAYER_DATA, playerFacade.getGetPlayerRequestHandler());
+        messageHandlerRegistry.put(MessageHandlerType.CREATE_PLAYER, playerFacade.getCreatePlayerRequestHandler());
         messageHandlerRegistry.put(MessageHandlerType.DEFAULT, new MessageHandlerInterface() {
             @Override
             public void handleMessage(String sessionId, String message) throws IOException {

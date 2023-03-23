@@ -1,13 +1,18 @@
 package com.colorify.game.utilities;
 
-import com.colorify.game.request.GetPlayer;
+import com.colorify.game.request.CreatePlayerRequest;
+import com.colorify.game.request.GetPlayerRequest;
 import com.google.gson.Gson;
 
 public class RequestResponseHelper {
     final static Gson gson = new Gson();
 
 
-    public static GetPlayer getPlayerIdRequest(String message) {
-        return gson.fromJson(message, GetPlayer.class);
+    public static GetPlayerRequest getPlayerIdRequest(String message) {
+        return gson.fromJson(message, GetPlayerRequest.class);
+    }
+
+    public static CreatePlayerRequest createPlayerIdRequest(String message) {
+        return gson.fromJson(message, CreatePlayerRequest.class);
     }
 }
