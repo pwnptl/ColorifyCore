@@ -1,6 +1,5 @@
 package com.platform.core.network;
 
-import com.colorify.game.utilities.Payload;
 import com.platform.core.registry.messageHandler.MessageHandlerRegistry;
 import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
@@ -45,7 +44,9 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
         sessionsManager.add(session);
         System.out.println("Opening Session " + session.getId());
         System.out.println("Current Sessions " + sessionsManager.get().stream().map(WebSocketSession::getId).toList());
-        TextMessage textMessage = new TextMessage(ObjectJsonConverter.toJSONWithType(MessageHandlerType.UNKNOWN.name(), "Established"));
+        Payload payload = new Payload(MessageHandlerType.UNKNOWN.getValue(), "Established");
+        Logger.debug("Sending Payload : " + ObjectJsonConverter.toJSON(payload));
+        TextMessage textMessage = new TextMessage(ObjectJsonConverter.toJSON(payload));
         session.sendMessage(textMessage);
     }
 

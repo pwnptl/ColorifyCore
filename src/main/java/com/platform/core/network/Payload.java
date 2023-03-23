@@ -1,4 +1,4 @@
-package com.colorify.game.utilities;
+package com.platform.core.network;
 
 import com.google.gson.Gson;
 import com.platform.core.utility.ObjectJsonConverter;
@@ -26,5 +26,9 @@ public class Payload {
         if(ObjectJsonConverter.isJson(s))
             payload.messageData = s;
         return payload;
+    }
+
+    public String asJson() {
+        return ObjectJsonConverter.toJSON(this);
     }
 }

@@ -3,7 +3,6 @@ package com.platform.core.utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.google.gson.JsonObject;
 import com.platform.core.registry.messageHandler.MessageHandlerType;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,25 +22,6 @@ public class ObjectJsonConverter {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static String toJSONWithType(String messageType, Object obj) {
-        String jsonObj = toJSON(obj);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("messageType", messageType);
-        jsonObject.addProperty("messageData", toJSON(obj));
-        return jsonObj;
-    }
-
-    public static String dummyJsonResponse() {
-        String data = "data";
-        String type = "PLAYER_DATA";
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(MESSAGE_DATA, data);
-        jsonObject.addProperty(MESSAGE_TYPE, type);
-        Logger.info("dummy response " + jsonObject.toString());
-        return jsonObject.toString();
     }
 
     public static MessageHandlerType getMessageType(String message) {
