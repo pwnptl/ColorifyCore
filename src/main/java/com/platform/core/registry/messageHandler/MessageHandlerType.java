@@ -6,10 +6,12 @@ public enum MessageHandlerType {
 
     // Requests -> should not require handler if explicit Response type is present. todo : simplify this incompetence.
     GET_PLAYER_DATA("GET_PLAYER_DATA"),
+    CREATE_PLAYER("CREATE_PLAYER"),
     SYN("SYN"),
 
     // Responses
     PLAYER_DATA("PLAYER_DATA"),
+    PLAYER_CREATED("PLAYER_CREATED"),
     ACK("ACK"),
 
 
