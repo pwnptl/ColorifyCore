@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Payload {
-    private String messageType;
-    private String messageData;
+    private final String messageType;
+    private final String messageData;
     private static final Gson gson = new Gson();
 
     public Payload(String messageType, Object obj) {
@@ -22,9 +22,9 @@ public class Payload {
 
     public static Payload fromJson(String json) {
         Payload payload = gson.fromJson(json, Payload.class);
-        String s = gson.fromJson(payload.messageData, String.class);
-        if(ObjectJsonConverter.isJson(s))
-            payload.messageData = s;
+//        String s = gson.fromJson(payload.messageData, String.class);
+//        if(ObjectJsonConverter.isJson(s))
+//            payload.messageData = s;
         return payload;
     }
 
