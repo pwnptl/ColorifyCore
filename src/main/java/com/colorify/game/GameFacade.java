@@ -5,15 +5,25 @@ import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.mechanics.BaseGame;
 import com.colorify.game.mechanics.cell.IntegerCell;
+import com.colorify.game.request.CreateGameRequest;
+import com.colorify.game.response.CreateGameResponse;
+import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.network.MyWebSocketHandler;
+import com.platform.core.network.Payload;
+import com.platform.core.network.SessionsManager;
 import com.platform.core.player.Player;
+import com.platform.core.registry.messageHandler.MessageHandlerInterface;
+import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
+import lombok.Getter;
 import lombok.NonNull;
+import org.springframework.web.socket.TextMessage;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,4 +112,20 @@ public class GameFacade extends BaseFacade {
     public String get(String gameId) {
         return getGame(gameId).toString();
     }
+
+    @Getter
+    private final MessageHandlerInterface createGameMessageHandler = new MessageHandlerInterface() {
+        @Override
+        public void handleMessage(String sessionId, String message) throws IOException {
+            CreateGameRequest createGameRequest = (CreateGameRequest) RequestResponseHelper.fromJson(message, CreateGameRequest.class);
+
+            GameDataResponse gameDataResponse = initGame();
+            gameDataResponse = addPlayer(gameDataResponse.getGameId(), createGameRequest.getCurrentPlayerId());
+
+            CreateGameResponse createGameResponse = new CreateGameResponse(gameDataResponse.getGameId(), gameDataResponse.getState().getValue());
+
+            String payload = new Payload(MessageHandlerType.GAME_CREATED.getValue(), createGameResponse).asJson();
+            SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+        }
+    };
 }

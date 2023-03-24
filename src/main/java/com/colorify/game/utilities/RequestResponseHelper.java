@@ -15,4 +15,8 @@ public class RequestResponseHelper {
     public static CreatePlayerRequest createPlayerIdRequest(String message) {
         return gson.fromJson(message, CreatePlayerRequest.class);
     }
+
+    public static <T> Object fromJson(String json, Class<T> c) {
+        return gson.fromJson(json, c);
+    }
 }
