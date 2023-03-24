@@ -121,6 +121,7 @@ class MongoDB extends AbstractDatabase {
     }
 
     private Document query(final MongoCollection<Document> collection, final String id) {
+        // todo : handle null queryResult.
         Document queryResult = collection.find(eq(Constants.DBConstants._id, id)).first();
         return (Document) queryResult.get(Constants.DBConstants._data);
     }
