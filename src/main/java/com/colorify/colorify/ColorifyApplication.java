@@ -16,9 +16,6 @@ public class ColorifyApplication {
         SpringApplication.run(ColorifyApplication.class, args);
     }
 
-    private static void initHandlers() {
-    }
-
     @RequestMapping(value = "/hello",
             method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
