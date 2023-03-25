@@ -6,7 +6,9 @@ import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.mechanics.BaseGame;
 import com.colorify.game.mechanics.cell.IntegerCell;
 import com.colorify.game.request.CreateGameRequest;
+import com.colorify.game.request.JoinGameRequest;
 import com.colorify.game.response.CreateGameResponse;
+import com.colorify.game.response.JoinGameResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
@@ -46,6 +48,7 @@ public class GameFacade extends BaseFacade {
         return response;
     }
 
+    // todo : if not joined, should throw error.
     public GameDataResponse addPlayer(@NonNull String gameId, String playerId) {
         BaseGame game = null;
         try {
@@ -126,6 +129,24 @@ public class GameFacade extends BaseFacade {
 
             String payload = new Payload(MessageHandlerType.GAME_CREATED.getValue(), createGameResponse).asJson();
             SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+        }
+    };
+    @Getter
+    private final MessageHandlerInterface joinGameMessageHandler = new MessageHandlerInterface() {
+        @Override
+        public void handleMessage(String sessionId, String message) throws IOException {
+            JoinGameRequest joinGameRequest = (JoinGameRequest) RequestResponseHelper.fromJson(message, JoinGameRequest.class);
+            JoinGameResponse joinGameResponse = null;
+            try {
+                GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
+                joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true);
+            } catch (Exception e) { // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
+                Logger.info("JOIN GAME HANDLER", e.getMessage());
+                joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false);
+            } finally {
+                String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
+                SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+            }
         }
     };
 }
