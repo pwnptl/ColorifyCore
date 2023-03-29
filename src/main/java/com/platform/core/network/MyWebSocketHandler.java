@@ -43,7 +43,6 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessionsManager.add(session);
         System.out.println("Opening Session " + session.getId());
-        System.out.println("Current Sessions " + sessionsManager.get().stream().map(WebSocketSession::getId).toList());
         Payload payload = new Payload(MessageHandlerType.UNKNOWN.getValue(), "Established");
         Logger.debug("Sending Payload : " + ObjectJsonConverter.toJSON(payload));
         TextMessage textMessage = new TextMessage(ObjectJsonConverter.toJSON(payload));
