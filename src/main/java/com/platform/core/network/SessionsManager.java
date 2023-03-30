@@ -1,8 +1,11 @@
 package com.platform.core.network;
 
+import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class SessionsManager {
@@ -30,13 +33,18 @@ public class SessionsManager {
     }
 
     public void addPlayerSession(String playerId, String sessionId) {
+        if (playerIdToSessionId.containsKey(playerId))
+            removePlayerSession(playerId);
         playerIdToSessionId.put(playerId, sessionId);
         sessionIdToPlayerId.put(sessionId, playerId);
     }
 
-    public void removePlayerSession(String playerId, String sessionId) {
-        playerIdToSessionId.remove(playerId);
-        sessionIdToPlayerId.remove(sessionId);
+    public void removePlayerSession(String playerId) {
+        String sessionId = findSessionIdByPlayerId(playerId);
+        if (sessionId != null) {
+            playerIdToSessionId.remove(playerId);
+            sessionIdToPlayerId.remove(sessionId);
+        }
     }
 
     public String findPlayerIdBySessionId(String sessionId) {
@@ -66,5 +74,14 @@ public class SessionsManager {
             return sessions.get(sessionId);
         Logger.info(this.getClass().getName(), "session not found : " + sessionId);
         return null;
+    }
+
+    public void send(String sessionId, MessageHandlerType messageHandlerType, Object response) {
+        try {
+            String payload = new Payload(messageHandlerType.getValue(), response).asJson();
+            get(sessionId).sendMessage(new TextMessage(payload));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
