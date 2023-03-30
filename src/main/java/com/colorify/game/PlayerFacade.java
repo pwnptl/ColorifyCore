@@ -3,11 +3,12 @@ package com.colorify.game;
 import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.request.CreatePlayerRequest;
 import com.colorify.game.request.GetPlayerRequest;
+import com.colorify.game.request.RegisterGameSessionRequest;
 import com.colorify.game.response.CreatePlayerResponse;
 import com.colorify.game.response.GetPlayerResponse;
+import com.colorify.game.response.RegisterGameSessionResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
-import com.platform.core.network.Payload;
 import com.platform.core.network.SessionsManager;
 import com.platform.core.player.HumanPlayer;
 import com.platform.core.player.Player;
@@ -17,7 +18,6 @@ import com.platform.core.utility.Logger;
 import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
-import org.springframework.web.socket.TextMessage;
 
 import java.io.IOException;
 
@@ -50,26 +50,36 @@ public class PlayerFacade extends BaseFacade {
             Player player = getPlayer(getPlayer.getPlayerId());
 
             GetPlayerResponse getPlayerResponse = new GetPlayerResponse(player);
-            String payload = new Payload(MessageHandlerType.PLAYER_DATA.name(), getPlayerResponse).asJson();
-
-            Logger.info("response = " + payload);
-            SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+            SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_DATA, getPlayerResponse);
         }
     };
 
     @Getter
     private final MessageHandlerInterface createPlayerRequestHandler = new MessageHandlerInterface() {
         @Override
-        public void handleMessage(String sessionId, String message) throws IOException {
+        public void handleMessage(String sessionId, String message) {
             Logger.info("message = " + message);
             CreatePlayerRequest createPlayerRequest = RequestResponseHelper.createPlayerIdRequest(message);
 
             String playerId = createPlayer(createPlayerRequest.getName());
             CreatePlayerResponse createPlayerResponse = new CreatePlayerResponse(playerId);
 
-            String payload = new Payload(MessageHandlerType.PLAYER_CREATED.name(), createPlayerResponse).asJson();
-            Logger.info("response = " + payload);
-            SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+            SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_CREATED, createPlayerResponse);
+        }
+    };
+
+
+    @Getter
+    private final MessageHandlerInterface registerPlayerSessionHandler = new MessageHandlerInterface() {
+        @Override
+        public void handleMessage(String sessionId, String message) {
+            RegisterGameSessionRequest registerGameSessionRequest = (RegisterGameSessionRequest) RequestResponseHelper.fromJson(message, RegisterGameSessionRequest.class);
+            SessionsManager.getInstance().addPlayerSession(registerGameSessionRequest.getUserId(), sessionId);
+
+            RegisterGameSessionResponse registerGameSessionResponse = new RegisterGameSessionResponse(true);
+
+
+            SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);
         }
     };
 }
