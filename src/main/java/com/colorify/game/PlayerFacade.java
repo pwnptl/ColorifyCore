@@ -76,8 +76,7 @@ public class PlayerFacade extends BaseFacade {
             RegisterPlayerSessionRequest registerGameSessionRequest = (RegisterPlayerSessionRequest) RequestResponseHelper.fromJson(message, RegisterPlayerSessionRequest.class);
             SessionsManager.getInstance().addPlayerSession(registerGameSessionRequest.getUserId(), sessionId);
 
-            RegisterPlayerSessionResponse registerGameSessionResponse = new RegisterPlayerSessionResponse(true);
-
+            RegisterPlayerSessionResponse registerGameSessionResponse = new RegisterPlayerSessionResponse(true, sessionId);
 
             SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);
         }
