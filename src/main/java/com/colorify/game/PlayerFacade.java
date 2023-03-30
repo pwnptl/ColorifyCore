@@ -3,10 +3,10 @@ package com.colorify.game;
 import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.request.CreatePlayerRequest;
 import com.colorify.game.request.GetPlayerRequest;
-import com.colorify.game.request.RegisterGameSessionRequest;
+import com.colorify.game.request.RegisterPlayerSessionRequest;
 import com.colorify.game.response.CreatePlayerResponse;
 import com.colorify.game.response.GetPlayerResponse;
-import com.colorify.game.response.RegisterGameSessionResponse;
+import com.colorify.game.response.RegisterPlayerSessionResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.network.SessionsManager;
@@ -73,10 +73,10 @@ public class PlayerFacade extends BaseFacade {
     private final MessageHandlerInterface registerPlayerSessionHandler = new MessageHandlerInterface() {
         @Override
         public void handleMessage(String sessionId, String message) {
-            RegisterGameSessionRequest registerGameSessionRequest = (RegisterGameSessionRequest) RequestResponseHelper.fromJson(message, RegisterGameSessionRequest.class);
+            RegisterPlayerSessionRequest registerGameSessionRequest = (RegisterPlayerSessionRequest) RequestResponseHelper.fromJson(message, RegisterPlayerSessionRequest.class);
             SessionsManager.getInstance().addPlayerSession(registerGameSessionRequest.getUserId(), sessionId);
 
-            RegisterGameSessionResponse registerGameSessionResponse = new RegisterGameSessionResponse(true);
+            RegisterPlayerSessionResponse registerGameSessionResponse = new RegisterPlayerSessionResponse(true);
 
 
             SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);

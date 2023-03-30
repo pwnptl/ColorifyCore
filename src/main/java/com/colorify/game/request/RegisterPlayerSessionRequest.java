@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterGameSessionRequest {
+public class RegisterPlayerSessionRequest {
     private final String userId;
 }

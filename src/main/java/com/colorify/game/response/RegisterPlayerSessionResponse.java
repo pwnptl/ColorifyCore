@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RegisterGameSessionResponse {
+public class RegisterPlayerSessionResponse {
     final boolean isRegistered;
 }
