@@ -13,6 +13,7 @@ import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
+import com.platform.core.game.GameState;
 import com.platform.core.network.MyWebSocketHandler;
 import com.platform.core.network.Payload;
 import com.platform.core.network.SessionsManager;
@@ -55,7 +56,13 @@ public class GameFacade extends BaseFacade {
             game = getGame(gameId);
             String addPlayerMessage = game.addPlayer(playerId);
             saveGame(gameId, game);
-            return new GameDataResponse(game, addPlayerMessage);
+            GameDataResponse response = new GameDataResponse(game, addPlayerMessage);
+            if (GameState.ALL_PLAYER_JOINED.getValue().equals(addPlayerMessage)) {
+                broadcast(game, response);
+            } else {
+                // todo: notify player about joining the game.
+            }
+            return response; // broadcast is able o send the message to every user. then who are we returning this value to?
         } catch (IllegalStateError e) {
             Logger.error(e.getLocalizedMessage());
             return new GameDataResponse(game, e.getLocalizedMessage());
@@ -95,6 +102,13 @@ public class GameFacade extends BaseFacade {
             response = new GameDataResponse(game, stateError.getLocalizedMessage());
         }
         return response;
+    }
+
+    private void broadcast(BaseGame game, GameDataResponse response) {
+        Logger.info("broadcasting that all player have joined,");
+        game.getPlayerIds().stream()
+                .map(playerId -> SessionsManager.getInstance().findSessionIdByPlayerId(playerId))
+                .forEach(sessionId -> SessionsManager.getInstance().send(sessionId, MessageHandlerType.GAME_READY, response));
     }
 
     private Player getPlayer(String playerId) {
@@ -140,7 +154,8 @@ public class GameFacade extends BaseFacade {
             try {
                 GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
                 joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true);
-            } catch (Exception e) { // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
+            } catch (
+                    Exception e) { // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
                 joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false);
             } finally {
