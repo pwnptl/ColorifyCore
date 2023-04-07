@@ -9,11 +9,11 @@ import java.util.ArrayList;
 
 public class BoardBuilder {
     private GameConfiguration gameConfiguration;
+    private Board board;
 
     public BoardBuilder withDefaultBoard() {
-        this.withDefaultConfiguration();
 
-        Board board = new Board(gameConfiguration);
+        board = new Board(gameConfiguration);
         ArrayList<ArrayList<Cell>> grid = populateGrid(gameConfiguration);
         Logger.info("created Board with rows " + gameConfiguration.getRows() + ", and cols " + gameConfiguration.getColumns());
         Logger.info("created Board " + grid.toString());
@@ -49,14 +49,24 @@ public class BoardBuilder {
         return this;
     }
 
-    private BoardBuilder withDefaultConfiguration() {
-        this.gameConfiguration = new GameConfiguration();
-        return this;
-    }
-
     public Board build() {
+        validateBoardPresent();
+        validateConfigurationPresent();
+
         Board board = new Board(gameConfiguration);
         board.setGrid(populateGrid(gameConfiguration));
         return board;
+    }
+
+    private void validateBoardPresent()
+    {
+
+        if (board == null)
+            throw new UnsupportedOperationException("board not initialised");
+    }
+    private void validateConfigurationPresent()
+    {
+        if (gameConfiguration == null)
+            throw new UnsupportedOperationException("gameConfiguration not initialised");
     }
 }

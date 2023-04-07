@@ -11,6 +11,7 @@ import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.*;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,10 @@ import java.util.stream.Collectors;
 
 @Getter
 public class BaseGame extends AbstractBaseGame {
+
+    @Setter
     private Board board;
+    @Setter
     private ColorifyPalette palette;
     private ScoreTracker scoreTracker;
     private ArrayList<CellCoordinate> playerCells;
@@ -30,16 +34,14 @@ public class BaseGame extends AbstractBaseGame {
 
     public BaseGame() {
         state = GameState.NOT_INITIALIZED;
+        gameId = RandomGenerator.getInstance().getUUID();
+        gameConfiguration = new GameConfiguration();
+        maxPlayerCount = gameConfiguration.getPlayerCount();
         init();
     }
 
     @Override
     public void init() {
-        gameId = RandomGenerator.getInstance().getUUID();
-        gameConfiguration = new GameConfiguration();
-        board = new Board(gameConfiguration);
-        palette = new ColorifyPalette(board, gameConfiguration);
-        maxPlayerCount = gameConfiguration.getPlayerCount();
         playerCells = new ArrayList<>();
         scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
         state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
@@ -92,7 +94,7 @@ public class BaseGame extends AbstractBaseGame {
 
     }
 
-    public List<String> getPlayerIds(){
+    public List<String> getPlayerIds() {
         return playerCells.stream().map(CellCoordinate::getPlayerId).collect(Collectors.toList());
     }
 
@@ -166,11 +168,10 @@ public class BaseGame extends AbstractBaseGame {
         stringBuilder.append("\n");
         stringBuilder.append("\n");
         stringBuilder.append("===========Score============\n");
-        for (CellCoordinate coordinate : playerCells)
-        {
+        for (CellCoordinate coordinate : playerCells) {
             stringBuilder.append("id : ").append(coordinate.getPlayerId(), 0, 5).append("\t");
             stringBuilder.append("r").append(coordinate.getR()).append(" c").append(coordinate.getC()).append("\t");
-            stringBuilder.append("score: " ).append(scoreTracker.getScores().get(coordinate.getPlayerId()));
+            stringBuilder.append("score: ").append(scoreTracker.getScores().get(coordinate.getPlayerId()));
             stringBuilder.append("\n");
         }
 

@@ -11,8 +11,7 @@ import com.platform.core.player.Player;
 import lombok.Getter;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashMap;
 
 @Getter
 public final class GameDataResponse {
@@ -25,7 +24,7 @@ public final class GameDataResponse {
     private final ColorifyPalette palette;
     private final ScoreTracker scoreTracker;
     private final GameState state;
-    private final List<Player> players;
+    private final HashMap<String, Player> players;
 
     public GameDataResponse(final BaseGame baseGame, String message) {
         this.gameId = baseGame.getGameId();
@@ -33,17 +32,19 @@ public final class GameDataResponse {
         this.maxPlayerCount = baseGame.getMaxPlayerCount();
         this.board = baseGame.getBoard();
         this.palette = baseGame.getPalette();
-        this.players = getPlayers(baseGame.getPlayerCells());
         this.scoreTracker = baseGame.getScoreTracker();
         this.state = baseGame.getState();
+        this.players = getPlayers(baseGame.getPlayerCells());
         this.message = message;
     }
 
-    private List<Player> getPlayers(ArrayList<CellCoordinate> playerCoordinates) {
+    private HashMap<String, Player> getPlayers(ArrayList<CellCoordinate> playerCoordinates) {
         PlayerFacade playerFacade = new PlayerFacade();
-        return playerCoordinates.stream()
-                .map(CellCoordinate::getPlayerId)
-                .map(playerFacade::getPlayer)
-                .collect(Collectors.toList());
+        HashMap<String, Player> players = new HashMap<>();
+        for (CellCoordinate cell : playerCoordinates) {
+            String playerId = cell.getPlayerId();
+            players.put(playerId, playerFacade.getPlayer(playerId));
+        }
+        return players;
     }
 }

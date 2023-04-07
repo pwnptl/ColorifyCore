@@ -4,6 +4,7 @@ import com.colorify.colorify.controller.errors.IllegalMoveException;
 import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.mechanics.BaseFacade;
 import com.colorify.game.mechanics.BaseGame;
+import com.colorify.game.mechanics.GameBuilder;
 import com.colorify.game.mechanics.cell.IntegerCell;
 import com.colorify.game.request.CreateGameRequest;
 import com.colorify.game.request.JoinGameRequest;
@@ -43,7 +44,7 @@ public class GameFacade extends BaseFacade {
     }
 
     public GameDataResponse initGame() {
-        AbstractBaseGame baseGame = new BaseGame();
+        AbstractBaseGame baseGame = new GameBuilder().addDefaultBoard().build();
         database.putGame(baseGame.getGameId(), baseGame);
         GameDataResponse response = new GameDataResponse((BaseGame) baseGame, null);
         return response;
@@ -58,7 +59,7 @@ public class GameFacade extends BaseFacade {
             saveGame(gameId, game);
             GameDataResponse response = new GameDataResponse(game, addPlayerMessage);
             if (GameState.ALL_PLAYER_JOINED.getValue().equals(addPlayerMessage)) {
-                broadcast(game, response);
+                broadcast(game, response); // todo : do this properly.
             } else {
                 // todo: notify player about joining the game.
             }
@@ -154,6 +155,7 @@ public class GameFacade extends BaseFacade {
             try {
                 GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
                 joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true);
+                // todo : broadcast to all players.
             } catch (
                     Exception e) { // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
