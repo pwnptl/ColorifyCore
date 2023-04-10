@@ -17,15 +17,19 @@ public class WebSocketHandlerHelper {
 
     public void broadcastMessageByPlayerIds(Set<String> playerIds, String message) {
         for (String playerId : playerIds) {
-            String sessionId = sessionsManager.findSessionIdByPlayerId(playerId);
-            WebSocketSession session = sessionsManager.get(sessionId);
-            try {
-                session.sendMessage(new TextMessage(message));
-            } catch (IOException e) {
-                Logger.error("exception caught in broadcasting to player " + playerId);
-                Logger.error(e.getMessage());
-                // throw new RuntimeException(e); // todo: broadcast using queues and threads with retryables.
-            }
+            sendMessageByPlayerId(playerId, message);
+        }
+    }
+
+    public void sendMessageByPlayerId(String playerId, String message) {
+        String sessionId = sessionsManager.findSessionIdByPlayerId(playerId);
+        WebSocketSession session = sessionsManager.get(sessionId);
+        try {
+            session.sendMessage(new TextMessage(message));
+        } catch (IOException e) {
+            Logger.error("exception caught in broadcasting to player " + playerId);
+            Logger.error(e.getMessage());
+            // throw new RuntimeException(e); // todo: broadcast using queues and threads with retryables.
         }
     }
 }
