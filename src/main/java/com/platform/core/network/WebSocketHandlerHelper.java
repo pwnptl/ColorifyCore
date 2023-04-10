@@ -5,17 +5,17 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Set;
 
 public class WebSocketHandlerHelper {
 
     private final SessionsManager sessionsManager;
 
-    WebSocketHandlerHelper() {
+    public WebSocketHandlerHelper() {
         this.sessionsManager = SessionsManager.getInstance();
     }
 
-    public void broadcastMessageByPlayerIds(ArrayList<String> playerIds, String message) {
+    public void broadcastMessageByPlayerIds(Set<String> playerIds, String message) {
         for (String playerId : playerIds) {
             String sessionId = sessionsManager.findSessionIdByPlayerId(playerId);
             WebSocketSession session = sessionsManager.get(sessionId);

@@ -14,10 +14,9 @@ import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
-import com.platform.core.game.GameState;
-import com.platform.core.network.MyWebSocketHandler;
 import com.platform.core.network.Payload;
 import com.platform.core.network.SessionsManager;
+import com.platform.core.network.WebSocketHandlerHelper;
 import com.platform.core.player.Player;
 import com.platform.core.registry.messageHandler.MessageHandlerInterface;
 import com.platform.core.registry.messageHandler.MessageHandlerType;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class GameFacade extends BaseFacade {
 
-    MyWebSocketHandler myWebSocketHandler = new MyWebSocketHandler();
+    WebSocketHandlerHelper webSocketHandlerHelper = new WebSocketHandlerHelper();
 
     private final PlayerFacade playerFacade = new PlayerFacade(); // todo: is this right?
 
@@ -58,11 +57,6 @@ public class GameFacade extends BaseFacade {
             String addPlayerMessage = game.addPlayer(playerId);
             saveGame(gameId, game);
             GameDataResponse response = new GameDataResponse(game, addPlayerMessage);
-            if (GameState.ALL_PLAYER_JOINED.getValue().equals(addPlayerMessage)) {
-                broadcast(game, response); // todo : do this properly.
-            } else {
-                // todo: notify player about joining the game.
-            }
             return response; // broadcast is able o send the message to every user. then who are we returning this value to?
         } catch (IllegalStateError e) {
             Logger.error(e.getLocalizedMessage());
@@ -79,7 +73,7 @@ public class GameFacade extends BaseFacade {
             throw new RuntimeException(e);
         }
         String jsonData = ObjectJsonConverter.toJSON(game);
-        myWebSocketHandler.boradcast(getConnectedSessions(game), jsonData);
+//        myWebSocketHandler.boradcast(getConnectedSessions(game), jsonData);
         return jsonData;
     }
 
@@ -103,13 +97,6 @@ public class GameFacade extends BaseFacade {
             response = new GameDataResponse(game, stateError.getLocalizedMessage());
         }
         return response;
-    }
-
-    private void broadcast(BaseGame game, GameDataResponse response) {
-        Logger.info("broadcasting that all player have joined,");
-        game.getPlayerIds().stream()
-                .map(playerId -> SessionsManager.getInstance().findSessionIdByPlayerId(playerId))
-                .forEach(sessionId -> SessionsManager.getInstance().send(sessionId, MessageHandlerType.GAME_READY, response));
     }
 
     private Player getPlayer(String playerId) {
@@ -152,15 +139,16 @@ public class GameFacade extends BaseFacade {
         public void handleMessage(String sessionId, String message) throws IOException {
             JoinGameRequest joinGameRequest = (JoinGameRequest) RequestResponseHelper.fromJson(message, JoinGameRequest.class);
             JoinGameResponse joinGameResponse = null;
+            GameDataResponse gameDataResponse = null;
             try {
-                GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
+                gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
                 joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true);
-                // todo : broadcast to all players.
-            } catch (
-                    Exception e) { // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
+                String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
+                webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayers().keySet(), payload);
+            } catch (Exception e) {
+                // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
                 joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false);
-            } finally {
                 String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
                 SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
             }
