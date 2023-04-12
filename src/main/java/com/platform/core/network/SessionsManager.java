@@ -1,11 +1,8 @@
 package com.platform.core.network;
 
-import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class SessionsManager {
@@ -61,6 +58,11 @@ public class SessionsManager {
         return null;
     }
 
+    public WebSocketSession findSessionByPlayerId(String playerId) {
+        String sessionId = findSessionIdByPlayerId(playerId);
+        return get(sessionId);
+    }
+
     public HashMap<String, WebSocketSession> get() {
         return sessions;
     }
@@ -74,14 +76,5 @@ public class SessionsManager {
             return sessions.get(sessionId);
         Logger.info(this.getClass().getName(), "session not found : " + sessionId);
         return null;
-    }
-
-    public void send(String sessionId, MessageHandlerType messageHandlerType, Object response) {
-        try {
-            String payload = new Payload(messageHandlerType.getValue(), response).asJson();
-            get(sessionId).sendMessage(new TextMessage(payload));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

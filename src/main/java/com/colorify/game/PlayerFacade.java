@@ -10,6 +10,7 @@ import com.colorify.game.response.RegisterPlayerSessionResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.network.SessionsManager;
+import com.platform.core.network.WebSocketHandlerHelper;
 import com.platform.core.player.HumanPlayer;
 import com.platform.core.player.Player;
 import com.platform.core.registry.messageHandler.MessageHandlerInterface;
@@ -24,10 +25,12 @@ import java.io.IOException;
 @Component
 public class PlayerFacade extends BaseFacade {
 
-    private final AbstractDatabase database;
+    private final AbstractDatabase database; // todo: create using bean.
+    private final WebSocketHandlerHelper webSocketHandlerHelper; // todo: create using bean.
 
     public PlayerFacade() {
         database = AbstractDatabase.getInstance(getTypeAdapters());
+        webSocketHandlerHelper = new WebSocketHandlerHelper();
     }
 
     public String createPlayer(@NonNull String name) {
@@ -50,7 +53,7 @@ public class PlayerFacade extends BaseFacade {
             Player player = getPlayer(getPlayer.getPlayerId());
 
             GetPlayerResponse getPlayerResponse = new GetPlayerResponse(player);
-            SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_DATA, getPlayerResponse);
+            webSocketHandlerHelper.sendMessageByPlayerId(getPlayer.getPlayerId(), MessageHandlerType.PLAYER_DATA, getPlayerResponse);
         }
     };
 
@@ -64,7 +67,7 @@ public class PlayerFacade extends BaseFacade {
             String playerId = createPlayer(createPlayerRequest.getName());
             CreatePlayerResponse createPlayerResponse = new CreatePlayerResponse(playerId);
 
-            SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_CREATED, createPlayerResponse);
+            webSocketHandlerHelper.sendMessageBySessionId(sessionId, MessageHandlerType.PLAYER_CREATED, createPlayerResponse);
         }
     };
 
@@ -73,12 +76,12 @@ public class PlayerFacade extends BaseFacade {
     private final MessageHandlerInterface registerPlayerSessionHandler = new MessageHandlerInterface() {
         @Override
         public void handleMessage(String sessionId, String message) {
+            // todo : can we refrain from using sessoionId? as it is not used in most handlers and sessionManager is used for sessionDetection.
             RegisterPlayerSessionRequest registerGameSessionRequest = (RegisterPlayerSessionRequest) RequestResponseHelper.fromJson(message, RegisterPlayerSessionRequest.class);
             SessionsManager.getInstance().addPlayerSession(registerGameSessionRequest.getUserId(), sessionId);
 
             RegisterPlayerSessionResponse registerGameSessionResponse = new RegisterPlayerSessionResponse(true, sessionId);
-
-            SessionsManager.getInstance().send(sessionId, MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);
+            webSocketHandlerHelper.sendMessageBySessionId(registerGameSessionRequest.getUserId(), MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);
         }
     };
 }

@@ -15,7 +15,6 @@ import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.network.Payload;
-import com.platform.core.network.SessionsManager;
 import com.platform.core.network.WebSocketHandlerHelper;
 import com.platform.core.player.Player;
 import com.platform.core.registry.messageHandler.MessageHandlerInterface;
@@ -24,7 +23,6 @@ import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
 import lombok.Getter;
 import lombok.NonNull;
-import org.springframework.web.socket.TextMessage;
 
 import java.io.IOException;
 import java.util.List;
@@ -129,8 +127,7 @@ public class GameFacade extends BaseFacade {
 
             CreateGameResponse createGameResponse = new CreateGameResponse(gameDataResponse.getGameId(), gameDataResponse.getState().getValue());
 
-            String payload = new Payload(MessageHandlerType.GAME_CREATED.getValue(), createGameResponse).asJson();
-            SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+            webSocketHandlerHelper.sendMessageByPlayerId(createGameRequest.getCurrentPlayerId(), MessageHandlerType.GAME_CREATED, createGameResponse);
         }
     };
     @Getter
@@ -149,8 +146,7 @@ public class GameFacade extends BaseFacade {
                 // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
                 joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false);
-                String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
-                SessionsManager.getInstance().get(sessionId).sendMessage(new TextMessage(payload));
+                webSocketHandlerHelper.sendMessageByPlayerId(joinGameRequest.getPlayerId(), MessageHandlerType.GAME_JOINED, joinGameResponse);
             }
         }
     };
