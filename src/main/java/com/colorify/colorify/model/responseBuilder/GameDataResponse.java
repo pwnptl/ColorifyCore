@@ -38,6 +38,13 @@ public final class GameDataResponse {
         this.message = message;
     }
 
+    public ArrayList<String> getPlayerList()
+    {
+        ArrayList<String> players = new ArrayList<>();
+        players.addAll(this.getPlayers().keySet());
+        return players;
+    }
+
     private HashMap<String, Player> getPlayers(ArrayList<CellCoordinate> playerCoordinates) {
         PlayerFacade playerFacade = new PlayerFacade();
         HashMap<String, Player> players = new HashMap<>();

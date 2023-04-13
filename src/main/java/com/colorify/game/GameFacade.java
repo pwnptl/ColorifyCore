@@ -136,16 +136,15 @@ public class GameFacade extends BaseFacade {
         public void handleMessage(String sessionId, String message) throws IOException {
             JoinGameRequest joinGameRequest = (JoinGameRequest) RequestResponseHelper.fromJson(message, JoinGameRequest.class);
             JoinGameResponse joinGameResponse = null;
-            GameDataResponse gameDataResponse = null;
+            GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
             try {
-                gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
-                joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true);
+                joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true, gameDataResponse.getPlayerList(), gameDataResponse.getState());
                 String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
                 webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayers().keySet(), payload);
             } catch (Exception e) {
                 // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
-                joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false);
+                joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false, gameDataResponse.getPlayerList(), gameDataResponse.getState());
                 webSocketHandlerHelper.sendMessageByPlayerId(joinGameRequest.getPlayerId(), MessageHandlerType.GAME_JOINED, joinGameResponse);
             }
         }
