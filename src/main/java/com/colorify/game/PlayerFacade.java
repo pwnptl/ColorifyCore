@@ -81,7 +81,7 @@ public class PlayerFacade extends BaseFacade {
             SessionsManager.getInstance().addPlayerSession(registerGameSessionRequest.getUserId(), sessionId);
 
             RegisterPlayerSessionResponse registerGameSessionResponse = new RegisterPlayerSessionResponse(true, sessionId);
-            webSocketHandlerHelper.sendMessageBySessionId(registerGameSessionRequest.getUserId(), MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);
+            webSocketHandlerHelper.sendMessageByPlayerId(registerGameSessionRequest.getUserId(), MessageHandlerType.PLAYER_SESSION_REGISTERED, registerGameSessionResponse);
         }
     };
 }
