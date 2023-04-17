@@ -7,14 +7,17 @@ import com.colorify.game.mechanics.BaseGame;
 import com.colorify.game.mechanics.GameBuilder;
 import com.colorify.game.mechanics.cell.IntegerCell;
 import com.colorify.game.request.CreateGameRequest;
+import com.colorify.game.request.GetGameRequest;
 import com.colorify.game.request.JoinGameRequest;
 import com.colorify.game.response.CreateGameResponse;
+import com.colorify.game.response.GetGameResponse;
 import com.colorify.game.response.JoinGameResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.network.Payload;
+import com.platform.core.network.SessionsManager;
 import com.platform.core.network.WebSocketHandlerHelper;
 import com.platform.core.player.Player;
 import com.platform.core.registry.messageHandler.MessageHandlerInterface;
@@ -146,6 +149,23 @@ public class GameFacade extends BaseFacade {
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
                 joinGameResponse = new JoinGameResponse(joinGameRequest.getGameId(), false, gameDataResponse.getPlayerList(), gameDataResponse.getState());
                 webSocketHandlerHelper.sendMessageByPlayerId(joinGameRequest.getPlayerId(), MessageHandlerType.GAME_JOINED, joinGameResponse);
+            }
+        }
+    };
+
+    @Getter
+    private final MessageHandlerInterface getGameMessageHandler = new MessageHandlerInterface() {
+        @Override
+        public void handleMessage(String sessionId, String message) throws IOException {
+            GetGameRequest getGameRequest = (GetGameRequest) RequestResponseHelper.fromJson(message, GetGameRequest.class);
+            GetGameResponse getGameResponse = null;
+            try {
+                String gameId = getGameRequest.getGameId();
+                GameDataResponse gameDataResponse = new GameDataResponse(getGame(gameId), null);
+                getGameResponse = new GetGameResponse(SessionsManager.getInstance().findPlayerIdBySessionId(sessionId), gameDataResponse); // can we get playerId from somewhere else ?
+                webSocketHandlerHelper.sendMessageBySessionId(sessionId, MessageHandlerType.GAME_DATA, getGameResponse);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     };

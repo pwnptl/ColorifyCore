@@ -31,8 +31,7 @@ public class WebSocketHandlerHelper {
 
     public void sendMessageByPlayerId(String playerId, MessageHandlerType messageHandlerType, Response response) {
         try {
-            String payload = new Payload(messageHandlerType.getValue(), response).asJson();
-            sessionsManager.findSessionByPlayerId(playerId).sendMessage(new TextMessage(payload));
+            sessionsManager.findSessionByPlayerId(playerId).sendMessage(getPayloadTextMessage(messageHandlerType, response));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -49,7 +48,16 @@ public class WebSocketHandlerHelper {
         }
     }
 
-    public void sendMessageBySessionId(String sessionId, MessageHandlerType playerCreated, Response createPlayerResponse) {
+    public void sendMessageBySessionId(String sessionId, MessageHandlerType messageHandlerType, Response response) {
+        try {
+            sessionsManager.get(sessionId).sendMessage(getPayloadTextMessage(messageHandlerType, response));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private TextMessage getPayloadTextMessage(MessageHandlerType messageHandlerType, Response response) {
+        String payload = new Payload(messageHandlerType.getValue(), response).asJson();
+        return new TextMessage(payload);
     }
 }
