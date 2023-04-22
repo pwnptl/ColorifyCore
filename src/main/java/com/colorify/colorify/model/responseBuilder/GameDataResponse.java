@@ -13,6 +13,8 @@ import lombok.Getter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
+// todo: unnecessary class so far, can be removed.
 @Getter
 public final class GameDataResponse {
 

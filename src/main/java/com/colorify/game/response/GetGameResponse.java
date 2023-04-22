@@ -29,7 +29,7 @@ public class GetGameResponse extends Response {
 
     @Getter
     @AllArgsConstructor
-    class Data {
+    private class Data {
         private final String gameId;
         private final int totalPossiblePlayerCount;
         private final ArrayList<String> currentPlayerIds;
