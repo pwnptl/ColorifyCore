@@ -60,6 +60,7 @@ public class SessionsManager {
 
     public WebSocketSession findSessionByPlayerId(String playerId) {
         String sessionId = findSessionIdByPlayerId(playerId);
+        if(sessionId == null) return null;
         return get(sessionId);
     }
 
