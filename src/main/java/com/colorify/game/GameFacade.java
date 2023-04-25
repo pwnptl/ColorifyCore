@@ -16,7 +16,6 @@ import com.colorify.game.utilities.RequestResponseHelper;
 import com.platform.core.database.AbstractDatabase;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
-import com.platform.core.network.Payload;
 import com.platform.core.network.SessionsManager;
 import com.platform.core.network.WebSocketHandlerHelper;
 import com.platform.core.player.Player;
@@ -106,7 +105,7 @@ public class GameFacade extends BaseFacade {
 
     private BaseGame getGame(final String gameId) {
         BaseGame game = (BaseGame) database.queryGame(gameId, BaseGame.class);
-        Logger.info("game from DB" + game.toString());
+//        Logger.info("game from DB" + game.toString());
         return game;
     }
 
@@ -142,8 +141,9 @@ public class GameFacade extends BaseFacade {
             GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
             try {
                 joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true, gameDataResponse.getPlayerList(), gameDataResponse.getState());
-                String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
-                webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayers().keySet(), payload);
+//                String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
+//                Logger.info("Payload for join" , payload);
+                webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayers().keySet(), MessageHandlerType.GAME_JOINED, joinGameResponse);
             } catch (Exception e) {
                 // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
