@@ -13,12 +13,9 @@ import java.util.List;
 
 public class ColorifyPalette extends Palette {
     @Getter
-    private ArrayList<Cell> paletteCells;
-
-    private final int colorCount;
+    private final ArrayList<Cell> paletteCells;
 
     public ColorifyPalette(final Board board, final GameConfiguration gameConfiguration) {
-        colorCount = gameConfiguration.getPaletteColourCount();
         paletteCells = new ArrayList<Cell>();
         addAllCellsIntoPalette(gameConfiguration);
         removeAlreadyPresentCells(board);

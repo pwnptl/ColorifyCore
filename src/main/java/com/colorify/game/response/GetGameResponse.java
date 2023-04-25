@@ -11,34 +11,30 @@ import lombok.Setter;
 import java.util.ArrayList;
 
 
+@Getter
 @Setter
 @AllArgsConstructor
 public class GetGameResponse extends Response {
 
     private final String requesterPlayerId;
-    private final Data data;
+    private final String gameId;
+    private final int totalPossiblePlayerCount;
+    private final ArrayList<String> currentPlayerIds;
+
+    private final GameState gameState;
+
+    private final Board board;
+    private final Palette palette;
+
 
     public GetGameResponse(String playerId, GameDataResponse gameDataResponse) {
         this.requesterPlayerId = playerId;
-        this.data = new Data(gameDataResponse.getGameId(),
-                gameDataResponse.getMaxPlayerCount(),
-                gameDataResponse.getPlayerList(),
-                gameDataResponse.getState(),
-                gameDataResponse.getBoard(),gameDataResponse.getPalette());
+        this.gameId = gameDataResponse.getGameId();
+        this.totalPossiblePlayerCount = gameDataResponse.getMaxPlayerCount();
+        this.currentPlayerIds = gameDataResponse.getPlayerList();
+        this.gameState = gameDataResponse.getState();
+        this.board = gameDataResponse.getBoard();
+        this.palette = gameDataResponse.getPalette();
     }
 
-    @Getter
-    @AllArgsConstructor
-    private class Data {
-        private final String gameId;
-        private final int totalPossiblePlayerCount;
-        private final ArrayList<String> currentPlayerIds;
-
-        private final GameState gameState;
-
-        private final Board board;
-        private final Palette palette;
-
-    }
 }
-
