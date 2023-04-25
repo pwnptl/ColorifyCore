@@ -2,8 +2,8 @@ package com.colorify.game.response;
 
 import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.mechanics.board.Board;
+import com.colorify.game.mechanics.palette.ColorifyPalette;
 import com.platform.core.game.GameState;
-import com.platform.core.game.Palette;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ public class GetGameResponse extends Response {
     private final GameState gameState;
 
     private final Board board;
-    private final Palette palette;
+    private final ColorifyPalette palette;
 
 
     public GetGameResponse(String playerId, GameDataResponse gameDataResponse) {

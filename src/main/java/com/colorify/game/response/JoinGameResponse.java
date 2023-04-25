@@ -10,7 +10,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class JoinGameResponse extends Response {
     private final String gameId;
-    private final boolean isJoined;
+    private final boolean joined;
     private ArrayList<String> joinedPlayers;
     private GameState gameState;
 }
