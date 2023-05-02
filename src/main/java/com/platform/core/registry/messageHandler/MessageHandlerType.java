@@ -11,6 +11,8 @@ public enum MessageHandlerType {
     GET_GAME("GET_GAME"),
     CREATE_GAME("CREATE_GAME"),
     JOIN_GAME("JOIN_GAME"),
+
+    MAKE_MOVE("MAKE_MOVE"),
     SYN("SYN"),
 
     // Responses
@@ -23,6 +25,7 @@ public enum MessageHandlerType {
     ACK("ACK"),
 
     GAME_READY("GAME_READY"),
+    MADE_MOVE("MADE_MOVE"),
 
     // Misc
     START_BUTTON_MESSAGE_HANDLER("START_BUTTON_MESSAGE_HANDLER"),
