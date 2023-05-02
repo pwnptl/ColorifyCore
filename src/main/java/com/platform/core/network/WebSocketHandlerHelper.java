@@ -19,6 +19,7 @@ public class WebSocketHandlerHelper {
 
 
     public void broadcastMessageByPlayerIds(ArrayList<String> playerIds, MessageHandlerType messageHandlerType, Response response) {
+        Logger.info("players to Broadcast : " + playerIds);
         for (String playerId : playerIds) {
             sendMessageByPlayerId(playerId, messageHandlerType, response);
         }
