@@ -11,6 +11,7 @@ import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.game.Cell;
 import com.platform.core.game.GameState;
 import com.platform.core.game.ScoreTracker;
+import com.platform.core.utility.Logger;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 import lombok.Setter;
@@ -94,8 +95,13 @@ public class BaseGame extends AbstractBaseGame {
         floodFill.floodFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()), newCell);
 
         int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell);
+        updatePalette();
         updateScoreTracker(coordinate.getPlayerId(), count);
         checkFinish();
+    }
+
+    private void updatePalette() {
+        palette = new ColorifyPalette(board, gameConfiguration); // todo: Bad practice to create a whole new Object. modify existing.
     }
 
     private void updateScoreTracker(String playerId, int count) {
@@ -194,6 +200,8 @@ public class BaseGame extends AbstractBaseGame {
     }
 
     public boolean isPlayerChance(String playerId) {
-        return playerId.equals(playerCells.get(0).getPlayerId());
+        boolean isChance = playerId.equals(playerCells.get(0).getPlayerId());
+        Logger.info(BaseGame.class.getName(), "player " + playerId + " Chance : " + isChance);
+        return isChance;
     }
 }
