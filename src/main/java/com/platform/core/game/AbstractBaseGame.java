@@ -18,9 +18,7 @@ public abstract class AbstractBaseGame {
 
     public abstract void makeMove(String player, Cell moveNo) throws IllegalMoveException;
 
-    public abstract void waitForOpponent();
-
-    public abstract void validate();
+    public abstract boolean checkFinish();
 
     public abstract void finish();
 
@@ -28,4 +26,5 @@ public abstract class AbstractBaseGame {
 
     public abstract void terminate();
 
+    public abstract void rotatePlayerChance();
 }

@@ -28,7 +28,7 @@ public class ScoreTrackerTypeAdapter extends TypeAdapter<ScoreTracker> {
             JsonToken next = in.peek();
             Gson gson = new Gson();
             Map<String, Score> scores = gson.fromJson(in, Map.class );
-            scoreTracker.setScores(scores);
+            scoreTracker.setPlayerIdToScoreMap(scores);
         }
         in.endObject();
         return scoreTracker;

@@ -4,6 +4,7 @@ import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
 import com.platform.core.game.GameState;
+import com.platform.core.game.ScoreTracker;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,8 @@ public class GetGameResponse extends Response {
     private final Board board;
     private final ColorifyPalette palette;
 
+    private final ScoreTracker scoreTracker;
+
 
     public GetGameResponse(String playerId, GameDataResponse gameDataResponse) {
         this.requesterPlayerId = playerId;
@@ -35,6 +38,7 @@ public class GetGameResponse extends Response {
         this.gameState = gameDataResponse.getState();
         this.board = gameDataResponse.getBoard();
         this.palette = gameDataResponse.getPalette();
+        this.scoreTracker = gameDataResponse.getScoreTracker();
     }
 
 }

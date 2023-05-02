@@ -1,8 +1,8 @@
 package com.colorify.game.mechanics;
 
 import com.colorify.colorify.controller.errors.IllegalMoveException;
+import com.colorify.game.mechanics.Strategies.FloodFill;
 import com.colorify.game.mechanics.board.Board;
-import com.colorify.game.mechanics.floodfill.FloodFill;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
 import com.colorify.game.mechanics.scoreTracker.ColorifyScore;
 import com.colorify.game.mechanics.scoreTracker.ColorifyScoreTracker;
@@ -28,8 +28,6 @@ public class BaseGame extends AbstractBaseGame {
     private ArrayList<CellCoordinate> playerCells;
     private GameState state;
 
-//    private BaseGameHistory history;
-
     private int maxPlayerCount;
 
     public BaseGame() {
@@ -43,9 +41,8 @@ public class BaseGame extends AbstractBaseGame {
     @Override
     public void init() {
         playerCells = new ArrayList<>();
-        scoreTracker = new ColorifyScoreTracker(maxPlayerCount);
+        scoreTracker = new ColorifyScoreTracker(gameConfiguration);
         state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
-//        history = new BaseGameHistory(this);
     }
 
     @Override
@@ -80,7 +77,7 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void makeMove(String playerId, Cell newCell) throws IllegalMoveException {
-        CellCoordinate coordinate = findPlayer(playerId);
+        CellCoordinate coordinate = findPlayerCoordinate(playerId);
 
         FloodFill floodFill = new FloodFill();
 
@@ -88,31 +85,33 @@ public class BaseGame extends AbstractBaseGame {
 
         int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell);
         updateScoreTracker(count, coordinate);
+        checkFinish();
     }
 
     private void updateScoreTracker(int count, CellCoordinate coordinate) {
-
+        // todo: implement
     }
 
     public List<String> getPlayerIds() {
         return playerCells.stream().map(CellCoordinate::getPlayerId).collect(Collectors.toList());
     }
 
-    private CellCoordinate findPlayer(String playerId) throws IllegalMoveException {
+    private CellCoordinate findPlayerCoordinate(String playerId) throws IllegalMoveException {
         for (CellCoordinate coordinate : playerCells)
             if (coordinate.getPlayerId().equals(playerId))
                 return coordinate;
         throw new IllegalMoveException("player not found" + playerId);
     }
 
-    @Override
-    public void waitForOpponent() {
-
-    }
 
     @Override
-    public void validate() {
-
+    public boolean checkFinish() {
+        for (String playerId : getPlayerIds())
+            if (scoreTracker.getPercentScoreByPlayer(playerId) >= 50) {
+                state = GameState.FINISH;
+                return true;
+            }
+        return false;
     }
 
     @Override
@@ -128,6 +127,11 @@ public class BaseGame extends AbstractBaseGame {
     @Override
     public void terminate() {
 
+    }
+
+    @Override
+    public void rotatePlayerChance() {
+        // todo:
     }
 
     private void populateScoreTracker() {
@@ -171,12 +175,16 @@ public class BaseGame extends AbstractBaseGame {
         for (CellCoordinate coordinate : playerCells) {
             stringBuilder.append("id : ").append(coordinate.getPlayerId(), 0, 5).append("\t");
             stringBuilder.append("r").append(coordinate.getR()).append(" c").append(coordinate.getC()).append("\t");
-            stringBuilder.append("score: ").append(scoreTracker.getScores().get(coordinate.getPlayerId()));
+            stringBuilder.append("score: ").append(scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()));
             stringBuilder.append("\n");
         }
 
         stringBuilder.append("=======================================");
         stringBuilder.append("\n\n");
         return stringBuilder.toString();
+    }
+
+    public boolean isPlayerChance(String playerId) {
+        return playerId.equals(playerCells.get(0).getPlayerId());
     }
 }
