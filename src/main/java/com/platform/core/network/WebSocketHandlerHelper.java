@@ -7,7 +7,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.ArrayList;
 
 public class WebSocketHandlerHelper {
 
@@ -18,7 +18,7 @@ public class WebSocketHandlerHelper {
     }
 
 
-    public void broadcastMessageByPlayerIds(Set<String> playerIds, MessageHandlerType messageHandlerType, Response response) {
+    public void broadcastMessageByPlayerIds(ArrayList<String> playerIds, MessageHandlerType messageHandlerType, Response response) {
         for (String playerId : playerIds) {
             sendMessageByPlayerId(playerId, messageHandlerType, response);
         }
