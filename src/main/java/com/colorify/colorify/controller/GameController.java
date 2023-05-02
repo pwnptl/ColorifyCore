@@ -38,7 +38,7 @@ public class GameController extends BaseController {
 
     @GetMapping("{gameId}/makeMove/{playerId}/move/{chosenCell}")
     public String makeMove(@PathVariable(value = "gameId", required = true) String gameId,
-                           @PathVariable(value = "chosenCell", required = true) String chosenCell,
+                           @PathVariable(value = "chosenCell", required = true) int chosenCell,
                            @PathVariable(value = "playerId", required = true) String playerId) {
         return ObjectJsonConverter.toJSON(gameFacade.makeMove(gameId, playerId, chosenCell));
     }
