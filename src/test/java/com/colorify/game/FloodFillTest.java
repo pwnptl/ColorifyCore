@@ -1,7 +1,8 @@
 package com.colorify.game;
 
-import com.colorify.game.mechanics.floodfill.FloodFill;
+import com.colorify.game.mechanics.Strategies.FloodFill;
 import com.colorify.game.mechanics.board.Board;
+import com.colorify.game.mechanics.board.BoardBuilder;
 import com.colorify.game.mechanics.cell.IntegerCell;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.game.Cell;
@@ -24,7 +25,7 @@ class FloodFillTest {
 
     private Board performFlooding(int r, int c, int iterations) {
         GameConfiguration gameConfiguration = new GameConfiguration(r, c, 2, 4);
-        Board board = new Board(gameConfiguration);
+        Board board = new BoardBuilder().withConfiguration(gameConfiguration).withDefaultBoard().build();
 
         printBoard(board);
 

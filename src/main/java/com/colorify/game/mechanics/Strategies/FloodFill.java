@@ -1,4 +1,4 @@
-package com.colorify.game.mechanics.floodfill;
+package com.colorify.game.mechanics.Strategies;
 
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.cell.IntegerCell;
@@ -20,10 +20,10 @@ public class FloodFill {
 
         if (board.getCell(r, c).getCell() == prevCell.getCell()) {
             board.getCell(r, c).setCell(newCell.getCell());
-            floodFill(board, r + 1, c, prevCell, newCell);
-            floodFill(board, r - 1, c, prevCell, newCell);
-            floodFill(board, r, c + 1, prevCell, newCell);
-            floodFill(board, r, c - 1, prevCell, newCell);
+            _floodFill(board, r + 1, c, prevCell, newCell);
+            _floodFill(board, r - 1, c, prevCell, newCell);
+            _floodFill(board, r, c + 1, prevCell, newCell);
+            _floodFill(board, r, c - 1, prevCell, newCell);
         }
     }
 
