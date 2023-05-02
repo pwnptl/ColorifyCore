@@ -24,7 +24,12 @@ public abstract class ScoreTracker {
     }
 
     public void updateScore(String playerId, int coveredCells) {
-        playerIdToScoreMap.getOrDefault(playerId, new Score(0)).setCount(coveredCells);
+        Score score = playerIdToScoreMap.get(playerId);
+        if (score == null) {
+            score = new Score(0);
+            playerIdToScoreMap.put(playerId, score);
+        }
+        score.setCount(coveredCells);
     }
 
     public float getPercentScoreByPlayer(String playerId) {

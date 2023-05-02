@@ -4,11 +4,13 @@ import com.colorify.colorify.controller.errors.IllegalMoveException;
 import com.colorify.game.mechanics.Strategies.FloodFill;
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
-import com.colorify.game.mechanics.scoreTracker.ColorifyScore;
 import com.colorify.game.mechanics.scoreTracker.ColorifyScoreTracker;
 import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
-import com.platform.core.game.*;
+import com.platform.core.game.AbstractBaseGame;
+import com.platform.core.game.Cell;
+import com.platform.core.game.GameState;
+import com.platform.core.game.ScoreTracker;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +49,13 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public String addPlayer(String playerId) throws IllegalStateError {
+        if (GameState.ALL_PLAYER_JOINED.equals(state)) {
+            start();
+            state = GameState.START;
+        }
+        if (GameState.START.equals(state)) {
+            return state.getValue();
+        }
         if (!GameState.WAITING_FOR_PLAYERS_TO_JOIN.equals(state)) {
             throw new IllegalStateError("game not in desired state for adding player");
         }
@@ -60,6 +69,7 @@ public class BaseGame extends AbstractBaseGame {
         playerCells.add(coordinate);
         if (playerCells.size() == maxPlayerCount) {
             state = GameState.ALL_PLAYER_JOINED;
+            start();
         }
         return state.getValue();
     }
@@ -84,12 +94,12 @@ public class BaseGame extends AbstractBaseGame {
         floodFill.floodFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()), newCell);
 
         int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell);
-        updateScoreTracker(count, coordinate);
+        updateScoreTracker(coordinate.getPlayerId(), count);
         checkFinish();
     }
 
-    private void updateScoreTracker(int count, CellCoordinate coordinate) {
-        // todo: implement
+    private void updateScoreTracker(String playerId, int count) {
+        scoreTracker.updateScore(playerId, count);
     }
 
     public List<String> getPlayerIds() {
@@ -131,15 +141,14 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void rotatePlayerChance() {
-        // todo:
+
     }
 
     private void populateScoreTracker() {
         FloodFill floodFill = new FloodFill();
         for (CellCoordinate coordinate : playerCells) {
             int count1 = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()));
-            Score scorePn = new ColorifyScore(count1);
-            scoreTracker.addScore(coordinate.getPlayerId(), scorePn);
+            scoreTracker.updateScore(coordinate.getPlayerId(), count1);
         }
     }
 
@@ -148,8 +157,8 @@ public class BaseGame extends AbstractBaseGame {
         playerCells.get(0).setR(0);
         playerCells.get(0).setC(0);
 
-        playerCells.get(0).setR(board.getRows() - 1);
-        playerCells.get(0).setC(board.getCols() - 1);
+        playerCells.get(1).setR(board.getRows() - 1);
+        playerCells.get(1).setC(board.getCols() - 1);
     }
 
     @Override
@@ -175,7 +184,7 @@ public class BaseGame extends AbstractBaseGame {
         for (CellCoordinate coordinate : playerCells) {
             stringBuilder.append("id : ").append(coordinate.getPlayerId(), 0, 5).append("\t");
             stringBuilder.append("r").append(coordinate.getR()).append(" c").append(coordinate.getC()).append("\t");
-            stringBuilder.append("score: ").append(scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()));
+            stringBuilder.append("score: ").append(scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()).getCount());
             stringBuilder.append("\n");
         }
 
