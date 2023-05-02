@@ -25,6 +25,11 @@ public class Logger {
         System.out.println(localizedMessage);
     }
 
+    public static void error(String log, String localizedMessage) {
+        System.out.print(log + " : ");
+        error(localizedMessage);
+    }
+
     public static void debug(String message) {
         System.out.println(message);
     }

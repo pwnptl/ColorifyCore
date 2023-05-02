@@ -123,6 +123,10 @@ class MongoDB extends AbstractDatabase {
     private Document query(final MongoCollection<Document> collection, final String id) {
         // todo : handle null queryResult.
         Document queryResult = collection.find(eq(Constants.DBConstants._id, id)).first();
+        if(queryResult == null)
+        {
+            throw new NullPointerException("\"queryResult\" is null for " + id);
+        }
         return (Document) queryResult.get(Constants.DBConstants._data);
     }
 
