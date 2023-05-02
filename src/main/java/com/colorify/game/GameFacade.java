@@ -62,12 +62,12 @@ public class GameFacade extends BaseFacade {
         }
     }
 
-    public BaseGame makeMove(String gameId, String playerId, String moveNo) {
+    public BaseGame makeMove(String gameId, String playerId, int moveNo) {
         BaseGame game = null;
         try {
             game = getGame(gameId);
             if (game.isPlayerChance(playerId)) {
-                game.makeMove(playerId, new IntegerCell(Integer.parseInt(moveNo)));
+                game.makeMove(playerId, new IntegerCell(moveNo));
                 game.rotatePlayerChance();
                 saveGame(gameId, game);
             } else {
@@ -174,7 +174,9 @@ public class GameFacade extends BaseFacade {
             MakeMoveRequest makeMoveRequest = (MakeMoveRequest) RequestResponseHelper.fromJson(message, MakeMoveRequest.class);
             String gameId = makeMoveRequest.getGameId();
             String playerId = makeMoveRequest.getPlayerId();
-            BaseGame game = makeMove(gameId, playerId, null);
+            int newColor = makeMoveRequest.getChosenColor();
+            Logger.info(GameFacade.class.getName(), gameId + ":" + playerId + ":" + newColor);
+            BaseGame game = makeMove(gameId, playerId, newColor);
             GameDataResponse gameDataResponse = new GameDataResponse(game, "madeMove");
             MakeMoveResponse makeMoveResponse = new MakeMoveResponse(playerId, gameDataResponse);
             webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayerList(), MessageHandlerType.MADE_MOVE, makeMoveResponse);

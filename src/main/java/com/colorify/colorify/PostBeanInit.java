@@ -37,6 +37,7 @@ public class PostBeanInit implements InitializingBean {
         messageHandlerRegistry.put(MessageHandlerType.GET_GAME, gameFacade.getGetGameMessageHandler());
         messageHandlerRegistry.put(MessageHandlerType.JOIN_GAME, gameFacade.getJoinGameMessageHandler());
         messageHandlerRegistry.put(MessageHandlerType.REGISTER_PLAYER_SESSION, playerFacade.getRegisterPlayerSessionHandler());
+        messageHandlerRegistry.put(MessageHandlerType.MAKE_MOVE, gameFacade.getMakeMoveMessageHandler());
         messageHandlerRegistry.put(MessageHandlerType.DEFAULT, new MessageHandlerInterface() {
             @Override
             public void handleMessage(String sessionId, String message) throws IOException {
