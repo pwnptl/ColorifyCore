@@ -17,20 +17,20 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class GetGameResponse extends Response {
 
-    private final String requesterPlayerId;
-    private final String gameId;
-    private final int totalPossiblePlayerCount;
-    private final ArrayList<String> currentPlayerIds;
+    protected final String requesterPlayerId;
+    protected final String gameId;
+    protected final int totalPossiblePlayerCount;
+    protected final ArrayList<String> currentPlayerIds;
 
-    private final GameState gameState;
+    protected final GameState gameState;
 
-    private final Board board;
-    private final ColorifyPalette palette;
+    protected final Board board;
+    protected final ColorifyPalette palette;
 
-    private final ScoreTracker scoreTracker;
+    protected final ScoreTracker scoreTracker;
 
 
-    public GetGameResponse(String playerId, GameDataResponse gameDataResponse) {
+    public GetGameResponse(final String playerId, final GameDataResponse gameDataResponse) {
         this.requesterPlayerId = playerId;
         this.gameId = gameDataResponse.getGameId();
         this.totalPossiblePlayerCount = gameDataResponse.getMaxPlayerCount();
