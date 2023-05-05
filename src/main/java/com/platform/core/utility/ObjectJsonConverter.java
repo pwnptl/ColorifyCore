@@ -3,11 +3,15 @@ package com.platform.core.utility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.platform.core.registry.messageHandler.MessageHandlerType;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * todo: use one json library.
+ */
 public class ObjectJsonConverter {
 
 
@@ -24,16 +28,9 @@ public class ObjectJsonConverter {
         }
     }
 
-    public static MessageHandlerType getMessageType(String message) {
-        JSONObject jsonObject = null;
-        try {
-            jsonObject = new JSONObject(message);
-            String type = jsonObject.getString(MESSAGE_TYPE);
-            return MessageHandlerType.getValue(type);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return MessageHandlerType.UNKNOWN;
+    public static String toPrettyJSON(Object object) {
+        Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+        return gsonPretty.toJson(object);
     }
 
     public static boolean isJson(String message) {
