@@ -21,6 +21,9 @@ public final class GameDataResponse {
     private final String message;
     private final String gameId;
     private final int currentPlayerCount;
+
+    private final  String currentChance;
+    private final int moveCount;
     private final int maxPlayerCount;
     private final Board board;
     private final ColorifyPalette palette;
@@ -37,7 +40,15 @@ public final class GameDataResponse {
         this.scoreTracker = baseGame.getScoreTracker();
         this.state = baseGame.getState();
         this.players = getPlayers(baseGame.getPlayerCells());
+        this.currentChance = getCurrentChancePlayerId(baseGame);
+        this.moveCount = baseGame.getMovesSoFar();
         this.message = message;
+    }
+
+    private String getCurrentChancePlayerId(BaseGame baseGame) {
+        if(getPlayerList().size() < baseGame.getMaxPlayerCount())
+            return null;
+        else return getPlayerList().get(baseGame.getPlayerChanceIndex());
     }
 
     public ArrayList<String> getPlayerList()

@@ -21,7 +21,8 @@ public class GetGameResponse extends Response {
     protected final String gameId;
     protected final int totalPossiblePlayerCount;
     protected final ArrayList<String> currentPlayerIds;
-
+    protected final String currentPlayerChance;
+    protected final int moveCount;
     protected final GameState gameState;
 
     protected final Board board;
@@ -35,6 +36,8 @@ public class GetGameResponse extends Response {
         this.gameId = gameDataResponse.getGameId();
         this.totalPossiblePlayerCount = gameDataResponse.getMaxPlayerCount();
         this.currentPlayerIds = gameDataResponse.getPlayerList();
+        this.currentPlayerChance = gameDataResponse.getCurrentChance();
+        this.moveCount = gameDataResponse.getMoveCount();
         this.gameState = gameDataResponse.getState();
         this.board = gameDataResponse.getBoard();
         this.palette = gameDataResponse.getPalette();

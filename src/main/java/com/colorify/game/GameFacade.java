@@ -68,7 +68,6 @@ public class GameFacade extends BaseFacade {
             game = getGame(gameId);
             if (game.isPlayerChance(playerId)) {
                 game.makeMove(playerId, new IntegerCell(moveNo));
-                game.rotatePlayerChance();
                 saveGame(gameId, game);
             } else {
                 // todo: what to do here
@@ -100,7 +99,7 @@ public class GameFacade extends BaseFacade {
         return playerFacade.getPlayer(playerId);
     }
 
-    private BaseGame getGame(final String gameId) {
+    public BaseGame getGame(final String gameId) {
         BaseGame game = (BaseGame) database.queryGame(gameId, BaseGame.class);
 //        Logger.info("game from DB" + game.toString());
         return game;
