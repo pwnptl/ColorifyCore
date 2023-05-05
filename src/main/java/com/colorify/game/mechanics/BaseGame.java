@@ -29,6 +29,8 @@ public class BaseGame extends AbstractBaseGame {
     private ColorifyPalette palette;
     private ScoreTracker scoreTracker;
     private ArrayList<CellCoordinate> playerCells;
+    private int playerChanceIndex;
+    private int movesSoFar;
     private GameState state;
 
     private int maxPlayerCount;
@@ -81,6 +83,7 @@ public class BaseGame extends AbstractBaseGame {
             throw new IllegalStateError("game not in desired state:");
         else state = GameState.START;
 
+        movesSoFar = 0;
         assignCoordinates();
         populateScoreTracker();
         return state.getValue();
@@ -95,8 +98,10 @@ public class BaseGame extends AbstractBaseGame {
         floodFill.floodFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()), newCell);
 
         int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell);
+        movesSoFar ++;
         updatePalette();
         updateScoreTracker(coordinate.getPlayerId(), count);
+        rotatePlayerChance();
         checkFinish();
     }
 
@@ -146,8 +151,8 @@ public class BaseGame extends AbstractBaseGame {
     }
 
     @Override
-    public void rotatePlayerChance() {
-
+    protected void rotatePlayerChance() {
+        playerChanceIndex = (playerChanceIndex +1) % maxPlayerCount;
     }
 
     private void populateScoreTracker() {
@@ -165,6 +170,8 @@ public class BaseGame extends AbstractBaseGame {
 
         playerCells.get(1).setR(board.getRows() - 1);
         playerCells.get(1).setC(board.getCols() - 1);
+
+        playerChanceIndex = RandomGenerator.getInstance().getRandNumber(maxPlayerCount); // chooses a random playing side.
     }
 
     @Override
@@ -200,7 +207,7 @@ public class BaseGame extends AbstractBaseGame {
     }
 
     public boolean isPlayerChance(String playerId) {
-        boolean isChance = playerId.equals(playerCells.get(0).getPlayerId());
+        boolean isChance = playerId.equals(playerCells.get(playerChanceIndex).getPlayerId());
         Logger.info(BaseGame.class.getName(), "player " + playerId + " Chance : " + isChance);
         return isChance;
     }

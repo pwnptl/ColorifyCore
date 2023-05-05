@@ -26,5 +26,5 @@ public abstract class AbstractBaseGame {
 
     public abstract void terminate();
 
-    public abstract void rotatePlayerChance();
+    protected abstract void rotatePlayerChance();
 }
