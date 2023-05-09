@@ -16,7 +16,7 @@ public class WebController implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler(), "/myHandler");
-        Logger.info("Adding myHandler");
+        Logger.info(WebController.class.getName(), "Adding myHandler");
     }
 
     @Bean
