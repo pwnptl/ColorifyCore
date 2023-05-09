@@ -11,7 +11,9 @@ public class FloodFill {
 
         Cell _prevCell = new IntegerCell(prevCell.getCell());
         Cell _newCell = new IntegerCell(newCell.getCell());
-        _floodFill(board, r, c, _prevCell, _newCell);
+        if (_prevCell.getCell() != _newCell.getCell()) {
+            _floodFill(board, r, c, _prevCell, _newCell);
+        }
     }
 
     private void _floodFill(final Board board, int r, int c, final Cell prevCell, final Cell newCell) {
