@@ -2,6 +2,7 @@ package com.colorify.game.mechanics;
 
 import com.colorify.colorify.controller.errors.IllegalMoveException;
 import com.colorify.game.mechanics.Strategies.FloodFill;
+import com.colorify.game.mechanics.Strategies.RotatingList;
 import com.colorify.game.mechanics.board.Board;
 import com.colorify.game.mechanics.palette.ColorifyPalette;
 import com.colorify.game.mechanics.scoreTracker.ColorifyScoreTracker;
@@ -11,12 +12,12 @@ import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.game.Cell;
 import com.platform.core.game.GameState;
 import com.platform.core.game.ScoreTracker;
-import com.platform.core.utility.Logger;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +29,7 @@ public class BaseGame extends AbstractBaseGame {
     @Setter
     private ColorifyPalette palette;
     private ScoreTracker scoreTracker;
-    private ArrayList<CellCoordinate> playerCells;
-    private int playerChanceIndex;
+    private RotatingList<CellCoordinate> playerCells;
     private int movesSoFar;
     private GameState state;
 
@@ -45,7 +45,7 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     public void init() {
-        playerCells = new ArrayList<>();
+        playerCells = new RotatingList<>();
         scoreTracker = new ColorifyScoreTracker(gameConfiguration);
         state = GameState.WAITING_FOR_PLAYERS_TO_JOIN;
     }
@@ -65,7 +65,7 @@ public class BaseGame extends AbstractBaseGame {
         for (CellCoordinate coordinate : playerCells) {
             String id = coordinate.getPlayerId();
             if (id.equals(playerId))
-                throw new IllegalArgumentException("Player Already Present");
+                return state.getValue();
         }
         CellCoordinate coordinate = new CellCoordinate();
         coordinate.setPlayerId(playerId);
@@ -98,7 +98,7 @@ public class BaseGame extends AbstractBaseGame {
         floodFill.floodFill(board, coordinate.getR(), coordinate.getC(), board.getCell(coordinate.getR(), coordinate.getC()), newCell);
 
         int count = floodFill.countFill(board, coordinate.getR(), coordinate.getC(), newCell);
-        movesSoFar ++;
+        movesSoFar++;
         updatePalette();
         updateScoreTracker(coordinate.getPlayerId(), count);
         rotatePlayerChance();
@@ -152,7 +152,7 @@ public class BaseGame extends AbstractBaseGame {
 
     @Override
     protected void rotatePlayerChance() {
-        playerChanceIndex = (playerChanceIndex +1) % maxPlayerCount;
+        playerCells.rotateNext();
     }
 
     private void populateScoreTracker() {
@@ -171,8 +171,13 @@ public class BaseGame extends AbstractBaseGame {
         playerCells.get(1).setR(board.getRows() - 1);
         playerCells.get(1).setC(board.getCols() - 1);
 
-        playerChanceIndex = RandomGenerator.getInstance().getRandNumber(maxPlayerCount); // chooses a random playing side.
+        shufflePlayerCells();
     }
+
+    private void shufflePlayerCells() {
+        Collections.shuffle(playerCells);
+    }
+
 
     @Override
     public String toString() {
@@ -197,18 +202,27 @@ public class BaseGame extends AbstractBaseGame {
         for (CellCoordinate coordinate : playerCells) {
             stringBuilder.append("id : ").append(coordinate.getPlayerId(), 0, 5).append("\t");
             stringBuilder.append("r").append(coordinate.getR()).append(" c").append(coordinate.getC()).append("\t");
-            stringBuilder.append("score: ").append(scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()).getCount());
+            if (scoreTracker.getPlayerIdToScoreMap() != null && scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()) != null)
+                stringBuilder.append("score: ").append(scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()).getCount());
             stringBuilder.append("\n");
         }
 
         stringBuilder.append("=======================================");
         stringBuilder.append("\n\n");
+        stringBuilder.append("Current Chance : ").append(getPlayerChance());
         return stringBuilder.toString();
     }
 
     public boolean isPlayerChance(String playerId) {
-        boolean isChance = playerId.equals(playerCells.get(playerChanceIndex).getPlayerId());
-        Logger.info(BaseGame.class.getName(), "player " + playerId + " Chance : " + isChance);
-        return isChance;
+        if (playerId == null) return false;
+        return playerId.equals(getPlayerChance());
+    }
+
+    public String getPlayerChance() {
+        if (playerCells == null || playerCells.peekFirst() == null)
+            return null;
+        else
+            return playerCells.peekFirst().getPlayerId();
+
     }
 }
