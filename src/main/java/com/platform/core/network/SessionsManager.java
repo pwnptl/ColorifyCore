@@ -30,8 +30,6 @@ public class SessionsManager {
     }
 
     public void addPlayerSession(String playerId, String sessionId) {
-        if (playerIdToSessionId.containsKey(playerId))
-            removePlayerSession(playerId);
         playerIdToSessionId.put(playerId, sessionId);
         sessionIdToPlayerId.put(sessionId, playerId);
     }
@@ -69,6 +67,7 @@ public class SessionsManager {
     }
 
     public void remove(final WebSocketSession session) {
+        // todo : incomplete impl.
         sessions.remove(session.getId());
     }
 
