@@ -1,11 +1,15 @@
 package com.colorify.colorify.controller;
 
+import com.colorify.colorify.model.responseBuilder.GameDataResponse;
 import com.colorify.game.GameFacade;
 import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/game/")
@@ -16,14 +20,20 @@ public class GameController extends BaseController {
 
     @GetMapping("init")
     public String init() {
-        Logger.info("\ninit api called");
+        Logger.info(GameController.class.getName(), "init api called");
         return ObjectJsonConverter.toJSON(gameFacade.initGame());
     }
 
     @GetMapping("{gameId}/get")
-    public String init(@PathVariable(value = "gameId") String gameId) {
-        Logger.info("\ninit api called");
+    public String get(@PathVariable(value = "gameId") String gameId) {
+        Logger.info(GameController.class.getName(), "init api called");
         return gameFacade.get(gameId).replace("\n", "<br/>");
+    }
+
+    @GetMapping(value = "{gameId}/getjson", produces = MediaType.TEXT_HTML_VALUE)
+    public String getJson(@PathVariable(value = "gameId") String gameId) {
+        Logger.info(GameController.class.getName(), "init api called");
+        return ObjectJsonConverter.toJSON(new GameDataResponse(gameFacade.getGame(gameId), ""));
     }
 
     @GetMapping("{gameId}/joinGame/{playerId}")
