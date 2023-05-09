@@ -47,7 +47,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public void init(final Map<Class, Object> typeAdapters) {
-        Logger.info("DB: mongo init");
+        Logger.info(MongoDB.class.getName(), "DB: mongo init");
         MongoClient mongoClient = MongoClients.create(Constants.DBConstants.DB_URI);
 
         CodecRegistry pojoCodecRegistry =
@@ -64,7 +64,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public boolean putPlayer(@NonNull final String playerId, final Player data) {
-        Logger.info("DB: Putting Player :" + playerId);
+        Logger.info(MongoDB.class.getName(), "DB: Putting Player :" + playerId);
         return put(playerCollection, playerId, data);
     }
 
@@ -76,7 +76,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public Player queryPlayer(String playerId) {
-        Logger.info("DB: Querying Player :" + playerId);
+        Logger.info(MongoDB.class.getName(), "DB: Querying Player :" + playerId);
 
         Document playerDocument = query(playerCollection, playerId);
         return gson.fromJson(playerDocument.toJson(), HumanPlayer.class); // todo: take this from Player::getPlayer
@@ -84,7 +84,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public AbstractBaseGame queryGame(String gameId, Class<BaseGame> gameClass) {
-        Logger.info("DB: Querying Game :" + gameId);
+        Logger.info(MongoDB.class.getName(), "DB: Querying Game :" + gameId);
 
         Document document = query(gameCollection, gameId);
 
@@ -98,7 +98,7 @@ class MongoDB extends AbstractDatabase {
 
     @Override
     public boolean updateGame(String gameId, BaseGame game) {
-        Logger.info("DB: Updating Game :" + gameId);
+        Logger.info(MongoDB.class.getName(), "DB: Updating Game :" + gameId);
         return update(gameCollection, gameId, game);
     }
 
