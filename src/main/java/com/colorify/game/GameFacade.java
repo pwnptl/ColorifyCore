@@ -70,6 +70,8 @@ public class GameFacade extends BaseFacade {
                 game.makeMove(playerId, new IntegerCell(moveNo));
                 saveGame(gameId, game);
             } else {
+                Logger.info("make move requested by : " + playerId);
+                Logger.info("curreny playerchance : " + game.getPlayerChance());
                 // todo: what to do here
             }
             return game;
@@ -137,8 +139,6 @@ public class GameFacade extends BaseFacade {
             GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
             try {
                 joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true, gameDataResponse.getPlayerList(), gameDataResponse.getState());
-//                String payload = new Payload(MessageHandlerType.GAME_JOINED.getValue(), joinGameResponse).asJson();
-//                Logger.info("Payload for join" , payload);
                 webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayerList(), MessageHandlerType.GAME_JOINED, joinGameResponse);
             } catch (Exception e) {
                 // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
