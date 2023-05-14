@@ -16,10 +16,10 @@ public class ColorifyApplication {
         SpringApplication.run(ColorifyApplication.class, args);
     }
 
-    @RequestMapping(value = "/hello",
+    @RequestMapping(value = "/ping",
             method = {RequestMethod.GET, RequestMethod.POST},
             produces = "application/json")
-    public String sayHello() {
-        return ObjectJsonConverter.toJSON("hello");
+    public String ping() {
+        return ObjectJsonConverter.toJSON("pong_by_colorify");
     }
 }
