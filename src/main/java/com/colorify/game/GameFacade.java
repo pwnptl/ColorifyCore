@@ -20,7 +20,6 @@ import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.network.SessionsManager;
 import com.platform.core.network.WebSocketHandlerHelper;
-import com.platform.core.player.Player;
 import com.platform.core.registry.messageHandler.MessageHandlerInterface;
 import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
@@ -32,8 +31,6 @@ import java.io.IOException;
 public class GameFacade extends BaseFacade {
 
     WebSocketHandlerHelper webSocketHandlerHelper = new WebSocketHandlerHelper();
-
-    private final PlayerFacade playerFacade = new PlayerFacade(); // todo: is this right?
 
     private final AbstractDatabase database;
 
@@ -97,22 +94,16 @@ public class GameFacade extends BaseFacade {
         return response;
     }
 
-    private Player getPlayer(String playerId) {
-        return playerFacade.getPlayer(playerId);
-    }
-
     public BaseGame getGame(final String gameId) {
         BaseGame game = (BaseGame) database.queryGame(gameId, BaseGame.class);
-//        Logger.info("game from DB" + game.toString());
         return game;
     }
 
     private void saveGame(final String gameId, BaseGame game) {
-//        Logger.info("game to DB" + ObjectJsonConverter.toJSON(game));
         database.updateGame(gameId, game);
     }
 
-    public String get(String gameId) {
+    public String getSerializedGame(String gameId) {
         return getGame(gameId).toString();
     }
 
@@ -136,10 +127,15 @@ public class GameFacade extends BaseFacade {
         public void handleMessage(String sessionId, String message) throws IOException {
             JoinGameRequest joinGameRequest = (JoinGameRequest) RequestResponseHelper.fromJson(message, JoinGameRequest.class);
             JoinGameResponse joinGameResponse = null;
-            GameDataResponse gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
+            GameDataResponse gameDataResponse = null;
             try {
+                gameDataResponse = addPlayer(joinGameRequest.getGameId(), joinGameRequest.getPlayerId());
                 joinGameResponse = new JoinGameResponse(gameDataResponse.getGameId(), true, gameDataResponse.getPlayerList(), gameDataResponse.getState());
                 webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayerList(), MessageHandlerType.GAME_JOINED, joinGameResponse);
+            } catch (NullPointerException npe) {
+                Logger.info(GameFacade.class.getName(), "NPE while joining : " + joinGameRequest.getGameId() + ", player : " + joinGameRequest.getPlayerId());
+                npe.printStackTrace();
+                webSocketHandlerHelper.sendMessageBySessionId(sessionId, MessageHandlerType.GAME_DATA, joinGameResponse);
             } catch (Exception e) {
                 // todo: catch exception specific to joining game and provide Reason/ReasonCode to Client.
                 Logger.info("JOIN GAME HANDLER", e.getMessage());
@@ -160,7 +156,12 @@ public class GameFacade extends BaseFacade {
                 GameDataResponse gameDataResponse = new GameDataResponse(getGame(gameId), null);
                 getGameResponse = new GetGameResponse(SessionsManager.getInstance().findPlayerIdBySessionId(sessionId), gameDataResponse); // can we get playerId from somewhere else ?
                 webSocketHandlerHelper.sendMessageBySessionId(sessionId, MessageHandlerType.GAME_DATA, getGameResponse);
+            } catch (NullPointerException npe) {
+                Logger.info(GameFacade.class.getName(), "NPE while get : " + getGameRequest.getGameId());
+                npe.printStackTrace();
+                webSocketHandlerHelper.sendMessageBySessionId(sessionId, MessageHandlerType.GAME_DATA, getGameResponse);
             } catch (Exception e) {
+                Logger.info(GameFacade.class.getName(), "Exception while get : " + getGameRequest.getGameId());
                 throw new RuntimeException(e);
             }
         }
@@ -175,10 +176,15 @@ public class GameFacade extends BaseFacade {
             String playerId = makeMoveRequest.getPlayerId();
             int newColor = makeMoveRequest.getChosenColor();
             Logger.info(GameFacade.class.getName(), gameId + ":" + playerId + ":" + newColor);
-            BaseGame game = makeMove(gameId, playerId, newColor);
-            GameDataResponse gameDataResponse = new GameDataResponse(game, "madeMove");
-            MakeMoveResponse makeMoveResponse = new MakeMoveResponse(playerId, gameDataResponse);
-            webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayerList(), MessageHandlerType.MADE_MOVE, makeMoveResponse);
+            try {
+                BaseGame game = makeMove(gameId, playerId, newColor);
+                GameDataResponse gameDataResponse = new GameDataResponse(game, "madeMove");
+                MakeMoveResponse makeMoveResponse = new MakeMoveResponse(playerId, gameDataResponse);
+                webSocketHandlerHelper.broadcastMessageByPlayerIds(gameDataResponse.getPlayerList(), MessageHandlerType.MADE_MOVE, makeMoveResponse);
+            } catch (Exception e) {
+                Logger.info(GameFacade.class.getName(), "Exception while making move : " + makeMoveRequest.getGameId());
+                throw new RuntimeException(e);
+            }
         }
     };
 }
