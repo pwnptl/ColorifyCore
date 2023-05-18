@@ -19,7 +19,7 @@ public class WebSocketHandlerHelper {
 
 
     public void broadcastMessageByPlayerIds(ArrayList<String> playerIds, MessageHandlerType messageHandlerType, Response response) {
-        Logger.info("players to Broadcast : " + playerIds);
+        Logger.info(WebSocketHandlerHelper.class.getName(), "players to Broadcast : " + playerIds);
         for (String playerId : playerIds) {
             sendMessageByPlayerId(playerId, messageHandlerType, response);
         }
@@ -30,7 +30,7 @@ public class WebSocketHandlerHelper {
 
             WebSocketSession session = sessionsManager.findSessionByPlayerId(playerId);
             if (session == null)
-                Logger.error("session Id not found for playerId " + playerId);
+                Logger.error(WebSocketHandlerHelper.class.getName(), "session Id not found for playerId " + playerId);
             else
                 session.sendMessage(getPayloadTextMessage(messageHandlerType, response));
         } catch (IOException e) {

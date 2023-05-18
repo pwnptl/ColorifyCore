@@ -40,7 +40,11 @@ public class PlayerFacade extends BaseFacade {
     }
 
     public Player getPlayer(@NonNull String playerId) {
-        return database.queryPlayer(playerId);
+        try {
+            return database.queryPlayer(playerId);
+        } catch (NullPointerException npe) {
+            return null;
+        }
     }
 
 
@@ -48,12 +52,17 @@ public class PlayerFacade extends BaseFacade {
     private final MessageHandlerInterface getPlayerRequestHandler = new MessageHandlerInterface() {
         @Override
         public void handleMessage(String sessionId, String message) throws IOException {
-            Logger.info("message = " + message);
             GetPlayerRequest getPlayer = RequestResponseHelper.getPlayerIdRequest(message);
-            Player player = getPlayer(getPlayer.getPlayerId());
-
-            GetPlayerResponse getPlayerResponse = new GetPlayerResponse(player);
-            webSocketHandlerHelper.sendMessageByPlayerId(getPlayer.getPlayerId(), MessageHandlerType.PLAYER_DATA, getPlayerResponse);
+            try {
+                Player player = getPlayer(getPlayer.getPlayerId());
+                GetPlayerResponse getPlayerResponse = new GetPlayerResponse(player);
+                Logger.info(PlayerFacade.class.getName(), "Player found : " + player.getPlayerId() + " " + player.getName());
+                webSocketHandlerHelper.sendMessageByPlayerId(getPlayer.getPlayerId(), MessageHandlerType.PLAYER_DATA, getPlayerResponse);
+            } catch (NullPointerException npe) {
+                // invalid user Input.
+                // todo : return invalid input response.
+                Logger.info(PlayerFacade.class.getName(), "Player not found : " + getPlayer.getPlayerId());
+            }
         }
     };
 
@@ -61,7 +70,6 @@ public class PlayerFacade extends BaseFacade {
     private final MessageHandlerInterface createPlayerRequestHandler = new MessageHandlerInterface() {
         @Override
         public void handleMessage(String sessionId, String message) {
-            Logger.info("message = " + message);
             CreatePlayerRequest createPlayerRequest = RequestResponseHelper.createPlayerIdRequest(message);
 
             String playerId = createPlayer(createPlayerRequest.getName());

@@ -4,6 +4,7 @@ import com.platform.core.utility.Logger;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class SessionsManager {
     private static SessionsManager instance;
@@ -62,11 +63,16 @@ public class SessionsManager {
         return get(sessionId);
     }
 
-    public HashMap<String, WebSocketSession> get() {
-        return sessions;
+    public Set<String> getSessionIds() {
+        return sessions.keySet();
     }
 
-    public void remove(final WebSocketSession session) {
+    public HashMap<String, String> getPlayerIdsToSessionIds()
+    {
+        return playerIdToSessionId;
+    }
+
+    public void removeSession(final WebSocketSession session) {
         // todo : incomplete impl.
         sessions.remove(session.getId());
     }

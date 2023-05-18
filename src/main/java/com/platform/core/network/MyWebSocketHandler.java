@@ -41,11 +41,13 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessionsManager.add(session);
         Logger.info(MyWebSocketHandler.class.getName(), "Opening Session " + session.getId());
+        Logger.info(MyWebSocketHandler.class.getName(), "All Sessions " + sessionsManager.getSessionIds().size() + " "+ sessionsManager.getSessionIds());
+        Logger.info(MyWebSocketHandler.class.getName(), "All PlayerTo Sessions " + sessionsManager.getPlayerIdsToSessionIds());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessionsManager.remove(session);
+        sessionsManager.removeSession(session);
         Logger.info(MyWebSocketHandler.class.getName(), "Closing Session " + session.getId());
     }
 

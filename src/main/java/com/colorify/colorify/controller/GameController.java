@@ -25,9 +25,9 @@ public class GameController extends BaseController {
     }
 
     @GetMapping("{gameId}/get")
-    public String get(@PathVariable(value = "gameId") String gameId) {
+    public String getHtml(@PathVariable(value = "gameId") String gameId) {
         Logger.info(GameController.class.getName(), "init api called");
-        return gameFacade.get(gameId).replace("\n", "<br/>");
+        return gameFacade.getSerializedGame(gameId).replace("\n", "<br/>");
     }
 
     @GetMapping(value = "{gameId}/getjson", produces = MediaType.TEXT_HTML_VALUE)
@@ -52,6 +52,4 @@ public class GameController extends BaseController {
                            @PathVariable(value = "playerId", required = true) String playerId) {
         return ObjectJsonConverter.toJSON(gameFacade.makeMove(gameId, playerId, chosenCell));
     }
-
-
 }

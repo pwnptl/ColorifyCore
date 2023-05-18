@@ -21,7 +21,7 @@ public class Logger {
         ArrayList<String> strings = new ArrayList<>();
         if (objs != null)
             for (Object o : objs) {
-                strings.add(objs.toString());
+                strings.add(Arrays.toString(objs));
             }
         System.out.println(log + " " + Arrays.toString(new ArrayList[]{strings}));
     }
