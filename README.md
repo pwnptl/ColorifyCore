@@ -2,6 +2,8 @@
 
 ## 1. About Game:
 
+### Running Server :
+`ssh -R 80:localhost:8080 serveo.net`
 ---
 ## 2. APIs
 ### 0. Socket Connect url
@@ -21,7 +23,7 @@
 {
   "messageType": "PLAYER_CREATED",
   "messageData": {
-    "playerId": "String",
+    "playerId": "String"
   }
 }
 ```
