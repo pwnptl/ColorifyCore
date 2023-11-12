@@ -1,7 +1,8 @@
 package com.platform.core.player;
 
-public class HumanPlayer extends Player {
+import java.io.Serializable;
 
+public class HumanPlayer extends Player implements Serializable{
     public HumanPlayer(String id, String name) {
         super(PlayerType.HUMAN, id, name);
     }

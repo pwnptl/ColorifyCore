@@ -26,12 +26,12 @@ import org.bson.conversions.Bson;
 import java.util.Map;
 
 import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.in;
 
 /**
  * package private MongoDB class.
  */
 class MongoDB extends AbstractDatabase {
-    private Gson gson;
 
     private MongoDatabase database;
     private MongoCollection<Document> playerCollection;
@@ -42,11 +42,12 @@ class MongoDB extends AbstractDatabase {
     }
 
     protected MongoDB(final Map<Class, Object> typeAdapters) {
-        init(typeAdapters);
+        super(typeAdapters);
+        init();
     }
 
     @Override
-    public void init(final Map<Class, Object> typeAdapters) {
+    public void init() {
         Logger.info(MongoDB.class.getName(), "DB: mongo init");
         MongoClient mongoClient = MongoClients.create(Constants.DBConstants.DB_URI);
 
@@ -59,7 +60,6 @@ class MongoDB extends AbstractDatabase {
         playerCollection = database.getCollection(Constants.DBConstants.PLAYER_TABLE_NAME);
         gameCollection = database.getCollection(Constants.DBConstants.GAME_COLLECTION_NAME);
 
-        initializeGsonWithTypeAdapters(typeAdapters);
     }
 
     @Override
@@ -136,14 +136,4 @@ class MongoDB extends AbstractDatabase {
         UpdateResult result = collection.updateOne(document, updates);
         return result.wasAcknowledged();
     }
-
-    private void initializeGsonWithTypeAdapters(final Map<Class, Object> typeAdapters) {
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        for (Map.Entry<Class, Object> pair : typeAdapters.entrySet()) {
-            gsonBuilder.registerTypeHierarchyAdapter(pair.getKey(), pair.getValue());
-        }
-        gson = gsonBuilder.create();
-    }
-
 }
