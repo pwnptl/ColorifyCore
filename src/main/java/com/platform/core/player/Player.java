@@ -5,16 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @AllArgsConstructor
-public abstract class Player {
+public abstract class Player implements Serializable {
 
     protected String playerId;
     protected String name;
     protected PlayerType type;
 
-    @Setter
-    protected String SessionId;
+//    @Setter
+//    protected String SessionId;
 
     public Player(final PlayerType type, final String name) {
         this.name = name;
