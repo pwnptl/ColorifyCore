@@ -4,12 +4,13 @@ import com.colorify.game.utilities.GameConfiguration;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 @Getter
 @Setter
-public abstract class ScoreTracker {
+public abstract class ScoreTracker implements Serializable {
     protected Map<String, Score> playerIdToScoreMap;
     protected int totalCells;
 

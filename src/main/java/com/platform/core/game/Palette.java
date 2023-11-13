@@ -1,4 +1,6 @@
 package com.platform.core.game;
 
-public class Palette {
+import java.io.Serializable;
+
+public class Palette implements Serializable {
 }

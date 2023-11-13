@@ -5,8 +5,10 @@ import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.errors.IllegalStateError;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public abstract class AbstractBaseGame {
+public abstract class AbstractBaseGame implements Serializable {
     protected String gameId;
     protected GameConfiguration gameConfiguration;
 

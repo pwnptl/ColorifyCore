@@ -2,8 +2,10 @@ package com.colorify.game.utilities;
 
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Getter
-public final class GameConfiguration {
+public final class GameConfiguration implements Serializable {
 
     int playerCount;
     int paletteColourCount;

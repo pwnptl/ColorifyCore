@@ -5,11 +5,12 @@ import com.platform.core.game.Cell;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Getter
 @Setter
-public class Board {
+public class Board implements Serializable {
 
     private ArrayList<ArrayList<Cell>> grid;
     private final int rows;
