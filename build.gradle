@@ -19,16 +19,16 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.mongodb:mongodb-driver-sync:4.8.1'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.projectlombok:lombok:1.18.22'
     implementation 'com.google.code.gson:gson:2.10'
 	implementation 'org.json:json:20171018'
 	implementation 'com.jayway.restassured:json-path:2.9.0'
 	implementation 'org.jsonx:jsonx:0.3.2'
 	implementation 'javax.servlet:servlet-api:2.5'
+	implementation 'org.mapdb:mapdb:3.0.9'
+	implementation 'org.slf4j:slf4j-log4j12:1.7.29'
     testImplementation 'junit:junit:4.13.1'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
