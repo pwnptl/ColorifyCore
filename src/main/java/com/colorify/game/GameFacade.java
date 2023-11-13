@@ -15,7 +15,7 @@ import com.colorify.game.response.GetGameResponse;
 import com.colorify.game.response.JoinGameResponse;
 import com.colorify.game.response.MakeMoveResponse;
 import com.colorify.game.utilities.RequestResponseHelper;
-import com.platform.core.database.AbstractDatabase;
+import com.platform.core.database.DatabaseAdapter;
 import com.platform.core.errors.IllegalStateError;
 import com.platform.core.game.AbstractBaseGame;
 import com.platform.core.network.SessionsManager;
@@ -32,10 +32,10 @@ public class GameFacade extends BaseFacade {
 
     WebSocketHandlerHelper webSocketHandlerHelper = new WebSocketHandlerHelper();
 
-    private final AbstractDatabase database;
+    private final DatabaseAdapter database;
 
     public GameFacade() {
-        database = AbstractDatabase.getInstance(getTypeAdapters());
+        database = new DatabaseAdapter();
     }
 
     public GameDataResponse initGame() {
@@ -95,8 +95,8 @@ public class GameFacade extends BaseFacade {
     }
 
     public BaseGame getGame(final String gameId) {
-        BaseGame game = (BaseGame) database.queryGame(gameId, BaseGame.class);
-        return game;
+//        BaseGame game = (BaseGame) database.queryGame(gameId, BaseGame.class);
+        return (BaseGame) database.queryGame(gameId);
     }
 
     private void saveGame(final String gameId, BaseGame game) {

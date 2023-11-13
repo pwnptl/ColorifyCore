@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/player/")
 public class PlayerController extends BaseController {
@@ -28,7 +30,13 @@ public class PlayerController extends BaseController {
 
     @GetMapping("/get")
     public String getPlayer(@RequestParam(value = "playerId", defaultValue = "dummyId") String id) {
-        Logger.info("\ncreatePlayer api called");
+        Logger.info("\nget api called");
         return ObjectJsonConverter.toJSON(playerFacade.getPlayer(id));
     }
- }
+
+    @GetMapping("/find_peers")
+    public List<String> find_peers() {
+        return playerFacade.findNearbyPlayers();
+//        return null;
+    }
+}
