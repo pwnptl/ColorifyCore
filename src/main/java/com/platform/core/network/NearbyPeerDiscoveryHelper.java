@@ -1,54 +1,85 @@
 package com.platform.core.network;
 
-import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+/**
+ *  Todo : Currently does not work.
+ *
+ *  1. Create Send Broadcast Method.
+ *  2. Create Listener for Broadcasted messages.
+ */
+@Slf4j
 public class NearbyPeerDiscoveryHelper {
 
-    private static final int SERVICE_PORT = 12345;
-    private static final int TIMEOUT = 2000; // 2 Sec
+    private static final int PORT = 12345;
+    private static final int BROADCAST_INTERVAL = 500; // in milliseconds
+    private static final int BROADCAST_DURATION = 2000; // in milliseconds
+    private static final int WAIT_FOR_ACK_TIMEOUT = 10000; // in milliseconds
+    private static final String DISCOVERY_MESSAGE = "DISCOVER"; // in milliseconds
+
+    private final List<InetAddress> discoveredPeers = new ArrayList<>();
 
     public List<InetAddress> discoverPeers() {
-        List<InetAddress> peers = new ArrayList<>();
-        try (DatagramSocket socket = new DatagramSocket(SERVICE_PORT, InetAddress.getByName("0.0.0.0"))) {
-            socket.setBroadcast(true);
-            socket.setSoTimeout(TIMEOUT);
-            System.out.println("Listening for peers on port " + SERVICE_PORT);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
 
-            while (true) {
-                byte[] receiveData = new byte[1024];
-                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+        executorService.scheduleAtFixedRate(this::sendBroadcast, 0, BROADCAST_INTERVAL, TimeUnit.MILLISECONDS);
 
-                try {
-                    socket.receive(receivePacket);
-
-                    InetAddress senderAddress = receivePacket.getAddress();
-                    int senderPort = receivePacket.getPort();
-
-                    System.out.println("Received packet from " + senderAddress + ":" + senderPort);
-
-                    String receivedMessage = new String(receivePacket.getData(), 0, receivePacket.getLength());
-                    System.out.println("Received message: " + receivedMessage);
-
-                    // Add senderAddress to peers if not already present
-                    if (!peers.contains(senderAddress)) {
-                        peers.add(senderAddress);
-                    }
-
-                    // Add your additional processing logic here
-
-                } catch (SocketTimeoutException ste) {
-                    // Handle timeout if needed
-                    break; // exit the loop when a timeout occurs
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        try {
+            Thread.sleep(BROADCAST_DURATION);
+        } catch (InterruptedException e) {
+            log.error("Discovery interrupted: {}", e.getMessage());
         }
 
-        return peers;
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(1, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error("Executor service termination interrupted: {}", e.getMessage());
+        }
+
+        log.info("Discovered peers: {}", discoveredPeers);
+        return discoveredPeers;
+    }
+
+    private void sendBroadcast() {
+        try (DatagramSocket socket = new DatagramSocket()) {
+            socket.setBroadcast(true);
+            byte[] sendData = DISCOVERY_MESSAGE.getBytes();
+
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("192.168.1.255"), PORT);
+            socket.send(sendPacket);
+
+            byte[] receiveData = new byte[1024];
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+
+            socket.setSoTimeout(WAIT_FOR_ACK_TIMEOUT);
+
+            while (true) {
+                try {
+                    socket.receive(receivePacket);
+                    InetAddress peerAddress = receivePacket.getAddress();
+                    int peerPort = receivePacket.getPort();
+                        log.info("haddr: " + peerAddress.getHostAddress());
+                    if (!discoveredPeers.contains(peerAddress + ":" + peerPort)) {
+                        discoveredPeers.add(peerAddress);
+                        log.info("Discovered peer: {}, {}", peerAddress, receivePacket);
+                    }
+                } catch (SocketTimeoutException e) {
+                    // Timeout reached, no more responses expected
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error during discovery: {}", e.getMessage());
+        }
     }
 
 }
