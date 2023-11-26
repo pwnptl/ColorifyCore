@@ -97,7 +97,12 @@ public class PlayerFacade extends BaseFacade {
         }
     };
 
+    /**
+     *  Blocked Peer Discovery Code.
+     *  https://github.com/pwnptl/ColorifyCore/issues/7#issue-2011085970
+     */
     public List<String> findNearbyPlayers() {
-        return new NearbyPeerDiscoveryHelper().discoverPeers().stream().map(InetAddress::toString).collect(Collectors.toList());
+        return null;
+        //return new NearbyPeerDiscoveryHelper().discoverPeers().stream().map(InetAddress::toString).collect(Collectors.toList());
     }
 }
