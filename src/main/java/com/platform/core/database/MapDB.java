@@ -17,7 +17,7 @@ public class MapDB extends AbstractDatabase {
 
     public MapDB() {
         super();
-        db = DBMaker.fileDB(Constants.DBConstants.DB_NAME).make();
+        db = DBMaker.fileDB(Constants.DBConstants.DB_NAME).checksumHeaderBypass().make();
         dataMaps = new HashMap<>();
     }
 
