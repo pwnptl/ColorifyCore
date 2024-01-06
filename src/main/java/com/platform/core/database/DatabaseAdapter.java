@@ -1,6 +1,10 @@
 package com.platform.core.database;
 
+import com.platform.core.utility.ObjectJsonConverter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.HashMap;
+import java.util.Set;
 
 @Slf4j
 public class DatabaseAdapter {
@@ -12,9 +16,10 @@ public class DatabaseAdapter {
         abstractDatabase2 = MapDB.getInstance();
         abstractDatabase2.addCollection(playerCollectionName);
         abstractDatabase2.addCollection(gameCollectionName);
-        log.info("init adapter");
+        log.info("Init Database");
 
     }
+
     // Create methods
     public void putPlayer(String key, Object value) {
         abstractDatabase2.create(playerCollectionName, key, value);
@@ -49,5 +54,18 @@ public class DatabaseAdapter {
 
     public void deleteGame(String key) {
         abstractDatabase2.delete(gameCollectionName, key);
+    }
+
+    public void clearAll() {
+        abstractDatabase2.reset(gameCollectionName);
+    }
+
+    public String getAll() {
+        Set<String> gameCollectionEntries = abstractDatabase2.getAll(gameCollectionName);
+        Set<String> playerCollectionEntries = abstractDatabase2.getAll(playerCollectionName);
+        HashMap<String, Set<String>> entries = new HashMap<>();
+        entries.put(gameCollectionName, gameCollectionEntries);
+        entries.put(playerCollectionName, playerCollectionEntries);
+        return ObjectJsonConverter.toJSON(entries);
     }
 }

@@ -1,5 +1,7 @@
 package com.platform.core.database;
 
+import java.util.Set;
+
 public abstract class AbstractDatabase {
     protected static AbstractDatabase instance;
 
@@ -27,4 +29,6 @@ public abstract class AbstractDatabase {
         // For simplicity, let's assume MapDB as the implementation
         return new MapDB();
     }
+
+    public abstract Set<String> getAll(String collectionName);
 }

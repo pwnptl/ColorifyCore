@@ -6,10 +6,10 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 public class MapDB extends AbstractDatabase {
@@ -42,7 +42,7 @@ public class MapDB extends AbstractDatabase {
     protected void create(String collectionName, String key, Object value) {
         try {
             Map<String, Object> collection = dataMaps.get(collectionName);
-            collection.put(key, value);
+            collection.computeIfAbsent(key, k -> {return value;});
             db.commit();
         } catch (NullPointerException npe) {
             throw new NullPointerException();
@@ -52,12 +52,15 @@ public class MapDB extends AbstractDatabase {
     @Override
     protected Object read(String collectionName, String key) {
         Map<String, Object> collection = dataMaps.get(collectionName);
-        log.info("collection " + collectionName + " have : " + collection);
+        log.debug("collection {} have {}", collectionName, collection);
         return collection.get(key);
     }
 
     @Override
     protected void update(String collectionName, String key, Object value) {
+        Map<String, Object> collection = dataMaps.get(collectionName);
+        collection.put(key, value);
+        db.commit();
     }
 
     @Override
@@ -67,6 +70,7 @@ public class MapDB extends AbstractDatabase {
     @Override
     protected void reset(String collectionName) {
         Map<String, Object> collection = dataMaps.get(collectionName);
+        log.debug("clearing DB {} of size {}", collectionName, collection.size());
         collection.clear();
         db.commit();
     }
@@ -77,5 +81,10 @@ public class MapDB extends AbstractDatabase {
         if (db != null && !db.isClosed()) {
             db.close();
         }
+    }
+
+    @Override
+    public Set<String> getAll(String collectionName) {
+        return dataMaps.get(collectionName).keySet();
     }
 }
