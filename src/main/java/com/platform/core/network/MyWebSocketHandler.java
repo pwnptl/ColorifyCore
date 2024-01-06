@@ -4,6 +4,7 @@ import com.platform.core.registry.messageHandler.MessageHandlerRegistry;
 import com.platform.core.registry.messageHandler.MessageHandlerType;
 import com.platform.core.utility.Logger;
 import com.platform.core.utility.ObjectJsonConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -12,6 +13,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.io.IOException;
 import java.util.Objects;
 
+@Slf4j
 public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetwork {
 
     private final SessionsManager sessionsManager;
@@ -47,8 +49,8 @@ public class MyWebSocketHandler extends TextWebSocketHandler implements BaseNetw
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        sessionsManager.removeSession(session);
-        Logger.info(MyWebSocketHandler.class.getName(), "Closing Session " + session.getId());
+        String playerId = sessionsManager.removeSession(session);
+        log.info("Closing Session for playerId {} and sessionId {}", playerId, session.getId());
     }
 
 }

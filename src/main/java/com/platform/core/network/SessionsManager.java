@@ -72,9 +72,11 @@ public class SessionsManager {
         return playerIdToSessionId;
     }
 
-    public void removeSession(final WebSocketSession session) {
+    public String removeSession(final WebSocketSession session) {
         // todo : incomplete impl.
+        String playerId = sessionIdToPlayerId.get(session.getId());
         sessions.remove(session.getId());
+        return playerId;
     }
 
     public WebSocketSession get(String sessionId) {
