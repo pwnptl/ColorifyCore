@@ -6,11 +6,13 @@ import com.colorify.game.utilities.GameConfiguration;
 import com.platform.core.game.Cell;
 import com.platform.core.game.Palette;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@ToString
 public class ColorifyPalette extends Palette {
     @Getter
     private final ArrayList<Cell> paletteCells;

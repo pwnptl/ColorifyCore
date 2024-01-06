@@ -3,11 +3,13 @@ package com.platform.core.game;
 import com.colorify.game.utilities.GameConfiguration;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+@ToString
 @Getter
 @Setter
 public abstract class ScoreTracker implements Serializable {

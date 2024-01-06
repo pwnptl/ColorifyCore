@@ -15,12 +15,13 @@ import com.platform.core.game.ScoreTracker;
 import com.platform.core.utility.RandomGenerator;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@ToString
 @Getter
 public class BaseGame extends AbstractBaseGame {
 
@@ -176,41 +177,6 @@ public class BaseGame extends AbstractBaseGame {
 
     private void shufflePlayerCells() {
         Collections.shuffle(playerCells);
-    }
-
-
-    @Override
-    public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("============Board========\n");
-        for (ArrayList<Cell> cellRow : board.getGrid()) {
-            for (Cell cell : cellRow) {
-                stringBuilder.append(cell.getCell()).append(" ");
-            }
-            stringBuilder.append("\n");
-        }
-        stringBuilder.append("\n");
-        stringBuilder.append("\n");
-        stringBuilder.append("===========Palette============\n");
-        for (Cell paletteCell : palette.getPaletteCells()) {
-            stringBuilder.append("\t\t").append(paletteCell.getCell());
-        }
-
-        stringBuilder.append("\n");
-        stringBuilder.append("\n");
-        stringBuilder.append("===========Score============\n");
-        for (CellCoordinate coordinate : playerCells) {
-            stringBuilder.append("id : ").append(coordinate.getPlayerId(), 0, 5).append("\t");
-            stringBuilder.append("r").append(coordinate.getR()).append(" c").append(coordinate.getC()).append("\t");
-            if (scoreTracker.getPlayerIdToScoreMap() != null && scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()) != null)
-                stringBuilder.append("score: ").append(scoreTracker.getPlayerIdToScoreMap().get(coordinate.getPlayerId()).getCount());
-            stringBuilder.append("\n");
-        }
-
-        stringBuilder.append("=======================================");
-        stringBuilder.append("\n\n");
-        stringBuilder.append("Current Chance : ").append(getPlayerChance());
-        return stringBuilder.toString();
     }
 
     public boolean isPlayerChance(String playerId) {
