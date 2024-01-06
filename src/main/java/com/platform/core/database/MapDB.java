@@ -6,6 +6,7 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +18,9 @@ public class MapDB extends AbstractDatabase {
 
     public MapDB() {
         super();
-        db = DBMaker.fileDB(Constants.DBConstants.DB_NAME).checksumHeaderBypass().make();
+        db = DBMaker.fileDB(Constants.DBConstants.DB_NAME)
+                .closeOnJvmShutdown()
+                .make();
         dataMaps = new HashMap<>();
     }
 
@@ -42,7 +45,6 @@ public class MapDB extends AbstractDatabase {
             collection.put(key, value);
             db.commit();
         } catch (NullPointerException npe) {
-            // todo: add log
             throw new NullPointerException();
         }
     }
